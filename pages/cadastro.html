@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cadastro</title>
+    </head>
+    <body>
+        <div class="container">    
+            <div class="logo">
+                <a href="#logo">
+                    <img src="../image/ecoescambo.png" alt="LogoEcoEscambo"/>
+                </a>
+            </div>
+            <!--Area de Cadastro--> 
+            <h3>Cadastro</h3>
+            <form id="form-cadastro">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required />
+                <span class="error" id="email_error" text="Error - e-mail inválido" style="display: block; min-height: 15px; "></span>
+
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="name" required />
+                <span class="error" id="nome_error" text="Error - inserir nome" style="display: block; min-height: 15px;"></span>
+
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" required />
+                <span class="error" id="senha-error" text="Error - senha" style="display: block; min-height: 15px;"></span>
+
+                <!--confirmar senha--> 
+                <label for="senha-conf">Confirmar Senha</label>
+                <input type="password" id="senha-conf" name="confirmar-senha" required/>
+                <span class="error" id="erro-senha-conf" style="display: block; min-height: 15px;">Error - senha incorreta</span>
+
+                <button class="btn" type="submit">Cadastrar</button>
+            </form>
+        </div>
+
+        <!--Caso ja seja usuario-->
+        <div class="button-txt">
+            Sou Cadastrado <a href="login.html">Entrar</a>
+        </div>
+    </body>
+</html>
