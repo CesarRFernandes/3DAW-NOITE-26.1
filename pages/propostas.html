@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Propostas — EcoEscambo</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+    <a href="explorar.html" class="navbar-logo">
+        <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+    </a>
+    <ul class="navbar-nav">
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="meus-produtos.html">Meus produtos</a></li>
+        <li><a href="propostas.html" class="ativo">Propostas</a></li>
+    </ul>
+    <div class="navbar-usuario">
+        <div class="avatar">AS</div>
+        <span style="color:#fff; font-size:0.85rem;">Ana Silva</span>
+        <a href="login.html" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
+    </div>
+    </nav>
+
+    <div class="conteudo">
+
+    <div class="cabecalho-pagina">
+        <h1>Propostas de troca</h1>
+    </div>
+
+    <div class="abas">
+        <button class="aba ativa" onclick="trocarAba('recebidas', this)">Recebidas</button>
+        <button class="aba" onclick="trocarAba('enviadas', this)">Enviadas</button>
+    </div>
+
+    <!-- ABA: RECEBIDAS -->
+    <div id="aba-recebidas">
+
+        <div class="card-proposta pendente">
+        <div class="proposta-header">
+            <div>
+            <p style="font-weight:600; font-size: 0.95rem;">Proposta de <strong>João Pereira</strong></p>
+            <p style="font-size: 0.8rem; color: var(--cinza-medio);">Enviada em 05/04/2026</p>
+            </div>
+            <span class="badge badge-aviso">Aguardando resposta</span>
+        </div>
+
+        <div class="proposta-itens">
+            <div class="proposta-item-box">
+            <p style="font-size:1.5rem;">💻</p>
+            <p style="font-size:0.8rem; font-weight:600;">Seu Monitor 24"</p>
+            <p style="font-size:0.75rem; color: var(--cinza-medio);">(você oferece)</p>
+            </div>
+            <div class="proposta-seta">&#8644;</div>
+            <div class="proposta-item-box">
+            <p style="font-size:1.5rem;">📷</p>
+            <p style="font-size:0.8rem; font-weight:600;">Câmera DSLR</p>
+            <p style="font-size:0.75rem; color: var(--cinza-medio);">(João oferece)</p>
+            </div>
+        </div>
+
+        <div class="proposta-acoes">
+            <button class="btn btn-primario" style="width:auto; padding: 8px 20px;" onclick="aceitarProposta(this)">Aceitar troca</button>
+            <button class="btn btn-perigo" style="padding: 8px 20px;" onclick="recusarProposta(this)">Recusar</button>
+            <a href="explorar.html" class="btn btn-secundario" style="padding: 8px 20px; font-size: 0.875rem;">Ver produtos de João</a>
+        </div>
+
+        <div class="confirmacao-aceita alerta alerta-sucesso" style="display:none; margin-top:12px;">
+            <span>&#10003;</span>
+            <span>
+            Troca aceita! Combine os detalhes com João Pereira.
+            <a href="avaliar.html" style="color:inherit; font-weight:600;">Avaliar após a troca &#8594;</a>
+            </span>
+        </div>
+        </div>
+
+    </div>
+
+    <!-- ABA: ENVIADAS -->
+    <div id="aba-enviadas" style="display:none;">
+
+        <div class="card-proposta">
+        <div class="proposta-header">
+            <div>
+            <p style="font-weight:600; font-size: 0.95rem;">Proposta para <strong>Carlos Mendes</strong></p>
+            <p style="font-size: 0.8rem; color: var(--cinza-medio);">Enviada em 03/04/2026</p>
+            </div>
+            <span class="badge badge-cinza">Aguardando resposta</span>
+        </div>
+
+        <div class="proposta-itens">
+            <div class="proposta-item-box">
+            <p style="font-size:1.5rem;">📚</p>
+            <p style="font-size:0.8rem; font-weight:600;">Enciclopédia Barsa</p>
+            <p style="font-size:0.75rem; color: var(--cinza-medio);">(você oferece)</p>
+            </div>
+            <div class="proposta-seta">&#8644;</div>
+            <div class="proposta-item-box">
+            <p style="font-size:1.5rem;">🎸</p>
+            <p style="font-size:0.8rem; font-weight:600;">Violão folk</p>
+            <p style="font-size:0.75rem; color: var(--cinza-medio);">(Carlos oferece)</p>
+            </div>
+        </div>
+        </div>
+
+    </div>
+
+    </div>
+
+    <script>
+    function trocarAba(id, btn) {
+        document.getElementById("aba-recebidas").style.display = "none";
+        document.getElementById("aba-enviadas").style.display = "none";
+        document.getElementById("aba-" + id).style.display = "block";
+        document.querySelectorAll(".aba").forEach(function(a) { a.classList.remove("ativa"); });
+        btn.classList.add("ativa");
+    }
+
+    function aceitarProposta(btn) {
+        var card = btn.closest(".card-proposta");
+        card.querySelector(".proposta-acoes").style.display = "none";
+        card.querySelector(".confirmacao-aceita").style.display = "flex";
+        card.style.borderLeftColor = "var(--sucesso)";
+        card.querySelector(".badge").textContent = "Troca aceita";
+        card.querySelector(".badge").style.background = "#eafaf1";
+        card.querySelector(".badge").style.color = "#1e8449";
+    }
+
+    function recusarProposta(btn) {
+        var card = btn.closest(".card-proposta");
+        if (confirm("Deseja recusar esta proposta?")) {
+        card.style.opacity = "0.5";
+        card.querySelector(".badge").textContent = "Recusada";
+        card.querySelector(".badge").style.background = "#fdf0ef";
+        card.querySelector(".badge").style.color = "#c0392b";
+        card.querySelector(".proposta-acoes").style.display = "none";
+        }
+    }
+    </script>
+
+</body>
+</html>

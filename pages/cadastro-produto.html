@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastrar produto — EcoEscambo</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+    <a href="explorar.html" class="navbar-logo">
+        <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+    </a>
+    <ul class="navbar-nav">
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="meus-produtos.html" class="ativo">Meus produtos</a></li>
+        <li><a href="propostas.html">Propostas</a></li>
+    </ul>
+    <div class="navbar-usuario">
+        <div class="avatar">AS</div>
+        <span style="color:#fff; font-size:0.85rem;">Ana Silva</span>
+        <a href="login.html" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
+    </div>
+    </nav>
+
+    <div class="conteudo">
+    <p style="margin-bottom: 20px;">
+        <a href="meus-produtos.html">&#8592; Meus produtos</a>
+    </p>
+
+    <div class="card" style="max-width: 600px; margin: 0;">
+        <h1 class="titulo-secao">Ofertar produto</h1>
+        <p class="subtitulo-secao">Preencha os dados do item que deseja trocar</p>
+
+        <form id="form-produto" novalidate>
+
+        <div class="grupo-campo">
+            <label for="nome-produto">Nome do produto</label>
+            <input type="text" id="nome-produto" name="nome-produto" placeholder="Ex: Violão folk acústico" required />
+        </div>
+
+        <div class="grupo-campo">
+            <label for="categoria">Categoria</label>
+            <select id="categoria" name="categoria">
+            <option value="">Selecione uma categoria</option>
+            <option>Eletrônicos</option>
+            <option>Livros</option>
+            <option>Roupas</option>
+            <option>Móveis</option>
+            <option>Esportes</option>
+            <option>Música</option>
+            <option>Games</option>
+            <option>Casa</option>
+            <option>Outros</option>
+            </select>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" name="descricao" placeholder="Descreva o estado do produto, o que está incluso, por que está trocando..." rows="4"></textarea>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="interesse">O que gostaria em troca? (opcional)</label>
+            <input type="text" id="interesse" name="interesse" placeholder="Ex: Livros, eletrônicos, instrumentos..."/>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+            <a href="meus-produtos.html" class="btn btn-secundario" style="flex: 1; text-align: center; padding: 11px;">
+            Cancelar
+            </a>
+            <button type="submit" class="btn btn-primario" style="flex: 2;" onclick="this.closest('form').onsubmit = function(e){ e.preventDefault(); window.location.href='meus-produtos.html'; }">Publicar produto</button>
+        </div>
+
+        </form>
+    </div>
+    </div>
+
+</body>
+</html>

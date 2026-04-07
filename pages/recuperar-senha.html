@@ -6,31 +6,55 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Recuperar senha</title>
 </head>
-
 <body>
-    <divc class="container">
+    <div class="pagina-central">
+    <div class="card">
+
         <div class="logo">
-            <a href="cadastro.html">
-                <img src="../image/ecoescambo.png" alt="LogoEcoEscambo">
-            </a>
+        <a href="login.html">
+            <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+        </a>
         </div>
 
-        <!--area de recuperar senha-->
-        <h3>Recuperar Senha</h3>
-        <form id="recuperar">
-            <label for="email">E-mail</label>
-            <input type="email" name="email" id="email" required>
-            <button class="btn" type="submit">Recuperar senha</button>
+        <h1 class="titulo-secao">Recuperar senha</h1>
+        <p class="subtitulo-secao">Informe seu e-mail para receber o link de redefinição</p>
+
+        <form id="form-recuperar" novalidate>
+
+        <div class="grupo-campo">
+            <label for="email">E-mail cadastrado</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" />
+            <span class="msg-erro" id="email-erro"></span>
+        </div>
+
+        <button class="btn btn-primario" type="submit" id="btn-recuperar" disabled>
+            Enviar link de recuperação
+        </button>
+
         </form>
 
-        <div class="extra">
-            <a href="login.html">Voltar</a>
+        <!-- Confirmação exibida após envio -->
+        <div id="aviso-enviado" class="alerta alerta-sucesso" style="display: none; margin-top: 12px;">
+        <span>&#10003;</span>
+        <span>
+            Link enviado! Verifique sua caixa de entrada (e o spam).
+            <br />
+            <a href="login.html" style="color: inherit; font-weight: 600;">Voltar ao login</a>
+        </span>
         </div>
 
-        <div class="button-txt">
-            Ainda não é Cadastrado <a href="cadastro.html">Cadastre-se</a>
+        <div class="divider"></div>
+
+        <div class="links-extras">
+        <a href="login.html">&#8592; Voltar ao login</a>
+        &nbsp;·&nbsp;
+        <a href="cadastro.html">Criar conta</a>
         </div>
-        </div>
+
     </div>
+    </div>
+
+    <script src="../js/validacao.js"></script>
+    <script>initCadastro();</script>
 </body>
 </html>

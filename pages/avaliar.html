@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Avaliar troca — EcoEscambo</title>
+</head>
+<body>
+    <nav class="navbar">
+    <a href="explorar.html" class="navbar-logo">
+        <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+    </a>
+    <ul class="navbar-nav">
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="meus-produtos.html">Meus produtos</a></li>
+        <li><a href="propostas.html">Propostas</a></li>
+    </ul>
+    <div class="navbar-usuario">
+        <div class="avatar">AS</div>
+        <span style="color:#fff; font-size:0.85rem;">Ana Silva</span>
+        <a href="login.html" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
+    </div>
+    </nav>
+
+    <div class="conteudo">
+    <p style="margin-bottom: 20px;">
+        <a href="meus-produtos.html">&#8592; Meus produtos</a>
+    </p>
+
+    <div class="card" style="max-width: 560px; margin: 0;" id="area-avaliacao">
+
+        <h1 class="titulo-secao">Avaliar troca</h1>
+        <p class="subtitulo-secao">Troca com <strong>João Pereira</strong> — Joystick PS4 ⇄ Câmera DSLR</p>
+
+        <div class="divider"></div>
+
+        <form id="form-avaliacao" novalidate>
+
+        <div class="grupo-campo">
+            <label>Avalie sua experiência</label>
+            <div class="estrelas" id="estrelas" style="margin-top: 6px;">
+            <span class="estrela" data-val="1" onclick="selecionarEstrela(1)">&#9733;</span>
+            <span class="estrela" data-val="2" onclick="selecionarEstrela(2)">&#9733;</span>
+            <span class="estrela" data-val="3" onclick="selecionarEstrela(3)">&#9733;</span>
+            <span class="estrela" data-val="4" onclick="selecionarEstrela(4)">&#9733;</span>
+            <span class="estrela" data-val="5" onclick="selecionarEstrela(5)">&#9733;</span>
+            </div>
+            <span id="label-estrela" style="font-size: 0.8rem; color: var(--cinza-medio); margin-top: 4px; display:block;"></span>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="comentario">Comentário (opcional)</label>
+            <textarea id="comentario" name="comentario" placeholder="Conte como foi a experiência da troca..." rows="3"></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <p style="font-size: 0.875rem; color: var(--cinza-medio); margin-bottom: 16px;">
+            Se o acordo não foi cumprido, você pode denunciar o utilizador.
+        </p>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primario" style="flex: 2;" id="btn-avaliar" onclick="enviarAvaliacao(event)">Enviar avaliação</button>
+            <button type="button" class="btn btn-perigo" style="flex: 1;" onclick="denunciar()">Denunciar</button>
+        </div>
+
+        </form>
+
+    </div>
+
+    <!-- Confirmação -->
+    <div id="area-confirmacao" class="card" style="max-width: 560px; margin: 0; display:none;">
+        <div style="text-align:center; padding: 20px 0;">
+        <p style="font-size: 3rem; margin-bottom: 12px;">🌱</p>
+        <h2 style="color: var(--verde-escuro); margin-bottom: 8px;">Avaliação enviada!</h2>
+        <p style="color: var(--cinza-medio); margin-bottom: 24px;">
+            Obrigado por contribuir com a comunidade EcoEscambo.
+        </p>
+        <a href="explorar.html" class="btn btn-primario" style="width: auto; padding: 10px 24px;">
+            Continuar explorando
+        </a>
+        </div>
+    </div>
+    </div>
+
+    <script>
+    var notaEscolhida = 0;
+    var labels = ["", "Péssimo", "Ruim", "Regular", "Bom", "Excelente"];
+
+    function selecionarEstrela(val) {
+        notaEscolhida = val;
+        document.querySelectorAll(".estrela").forEach(function(s, i) {
+        s.classList.toggle("ativa", i < val);
+        });
+        document.getElementById("label-estrela").textContent = labels[val] || "";
+    }
+
+    function enviarAvaliacao(e) {
+        e.preventDefault();
+        document.getElementById("area-avaliacao").style.display = "none";
+        document.getElementById("area-confirmacao").style.display = "block";
+    }
+
+    function denunciar() {
+        if (confirm("Deseja denunciar João Pereira por descumprimento de acordo? Esta ação será analisada pela equipe EcoEscambo.")) {
+        alert("Denúncia registrada. Nossa equipe irá analisar o caso.");
+        window.location.href = "meus-produtos.html";
+        }
+    }
+    </script>
+
+</body>
+</html>

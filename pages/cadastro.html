@@ -6,39 +6,66 @@
         <title>Cadastro</title>
     </head>
     <body>
-        <div class="container">    
-            <div class="logo">
-                <a href="#logo">
-                    <img src="../image/ecoescambo.png" alt="LogoEcoEscambo"/>
-                </a>
+    <div class="pagina-central">
+    <div class="card">
+
+        <div class="logo">
+        <a href="login.html">
+            <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+        </a>
+        </div>
+
+        <h1 class="titulo-secao">Criar conta</h1>
+        <p class="subtitulo-secao">Junte-se à comunidade de trocas ecológicas</p>
+
+        <form id="form-cadastro" novalidate>
+
+        <div class="grupo-campo">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" />
+            <span class="msg-erro" id="email-erro"></span>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" name="nome" placeholder="Como quer ser chamado(a)" autocomplete="name" />
+            <span class="msg-erro" id="nome-erro"></span>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" placeholder="Crie uma senha segura" autocomplete="new-password" />
+            <div class="forca-senha">
+            <div class="forca-barra">
+                <div class="forca-progresso" id="forca-progresso"></div>
             </div>
-            <!--Area de Cadastro--> 
-            <h3>Cadastro</h3>
-            <form id="form-cadastro">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" required />
-                <span class="error" id="email_error" text="Error - e-mail inválido" style="display: block; min-height: 15px; "></span>
-
-                <label for="nome">Nome</label>
-                <input type="text" id="nome" name="name" required />
-                <span class="error" id="nome_error" text="Error - inserir nome" style="display: block; min-height: 15px;"></span>
-
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" required />
-                <span class="error" id="senha-error" text="Error - senha" style="display: block; min-height: 15px;"></span>
-
-                <!--confirmar senha--> 
-                <label for="senha-conf">Confirmar Senha</label>
-                <input type="password" id="senha-conf" name="confirmar-senha" required/>
-                <span class="error" id="erro-senha-conf" style="display: block; min-height: 15px;">Error - senha incorreta</span>
-
-                <button class="btn" type="submit">Cadastrar</button>
-            </form>
+            <span class="forca-texto" id="forca-texto"></span>
+            </div>
+            <span class="msg-dica">Mínimo 6 caracteres, letras maiúsculas, minúsculas e números.</span>
+            <span class="msg-erro" id="senha-erro"></span>
         </div>
 
-        <!--Caso ja seja usuario-->
-        <div class="button-txt">
-            Sou Cadastrado <a href="login.html">Entrar</a>
+        <div class="grupo-campo">
+            <label for="senha-conf">Confirmar senha</label>
+            <input type="password" id="senha-conf" name="senha-conf" placeholder="Repita a senha" autocomplete="new-password"/>
+            <span class="msg-erro" id="conf-erro"></span>
         </div>
-    </body>
+
+        <button class="btn btn-primario" type="submit" id="btn-cadastrar" disabled>
+            Criar conta
+        </button>
+
+        </form>
+
+        <div class="divider"></div>
+
+        <div class="links-extras">Já tem conta?<a href="login.html">Entrar</a>
+        </div>
+
+    </div>
+    </div>
+
+    <script src="../js/validacao.js"></script>
+    <script>initCadastro();</script>
+</body>
 </html>

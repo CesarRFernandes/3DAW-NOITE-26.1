@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus produtos — EcoEscambo</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+    <a href="explorar.html" class="navbar-logo">
+        <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+    </a>
+    <ul class="navbar-nav">
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="meus-produtos.html" class="ativo">Meus produtos</a></li>
+        <li><a href="propostas.html">Propostas</a></li>
+    </ul>
+    <div class="navbar-usuario">
+        <div class="avatar">AS</div>
+        <span style="color:#fff; font-size:0.85rem;">Ana Silva</span>
+        <a href="login.html" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
+    </div>
+    </nav>
+
+    <div class="conteudo">
+
+    <div class="cabecalho-pagina">
+        <h1>Meus produtos</h1>
+        <a href="cadastrar-produto.html" class="btn btn-primario" style="width:auto; padding: 10px 20px;">+ Novo produto</a>
+    </div>
+
+    <div class="alerta alerta-aviso">
+        <span>&#9888;</span>
+        <span>
+        <strong>Novo interesse!</strong>
+        João Pereira tem interesse no seu <strong>Monitor 24"</strong>.
+        <a href="explorar.html" style="color: inherit; font-weight: 600;">Ver produtos dele &#8594;</a>
+        </span>
+    </div>
+
+    <table class="tabela-meus-produtos">
+        <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>Status</th>
+            <th>Interesses</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+            <div style="display:flex; align-items:center; gap: 10px;">
+                <span style="font-size:1.5rem;">💻</span>
+                <span>Monitor 24" Full HD</span>
+            </div>
+            </td>
+            <td><span class="badge badge-verde">Eletrônicos</span></td>
+            <td><span class="badge badge-aviso">1 interesse</span></td>
+            <td>1</td>
+            <td>
+            <a href="cadastrar-produto.html" class="btn btn-secundario" style="padding: 5px 12px; font-size:0.8rem;">Editar</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <div style="display:flex; align-items:center; gap: 10px;">
+                <span style="font-size:1.5rem;">📚</span>
+                <span>Enciclopédia Barsa (10 vol.)</span>
+            </div>
+            </td>
+            <td><span class="badge badge-verde">Livros</span></td>
+            <td><span class="badge badge-cinza">Disponível</span></td>
+            <td>0</td>
+            <td>
+            <a href="cadastrar-produto.html" class="btn btn-secundario" style="padding: 5px 12px; font-size:0.8rem;">Editar</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <div style="display:flex; align-items:center; gap: 10px;">
+                <span style="font-size:1.5rem;">🎮</span>
+                <span>Joystick PS4</span>
+            </div>
+            </td>
+            <td><span class="badge badge-verde">Games</span></td>
+            <td>
+            <span class="badge" style="background:#eafaf1; color: #1e8449;">Troca confirmada</span>
+            </td>
+            <td>—</td>
+            <td>
+            <a href="avaliar.html" class="btn btn-primario" style="padding: 5px 12px; font-size:0.8rem; width:auto;">Avaliar troca</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    </div>
+</body>
+</html>
