@@ -4,6 +4,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meus produtos — EcoEscambo</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        .produto-img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.aberto { display: flex; }
+        .modal-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        }
+        .modal-box h2 { margin-bottom: 20px; font-size: 1.2rem; color: var(--texto); }
+        .modal-box label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: var(--texto); }
+        .modal-box input, .modal-box textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .modal-box textarea { resize: vertical; min-height: 80px; }
+        .modal-acoes { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+        .icone-usuario {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,8 +66,7 @@
         <li><a href="propostas.html">Propostas</a></li>
     </ul>
     <div class="navbar-usuario">
-        <div class="avatar">AS</div>
-        <span style="color:#fff; font-size:0.85rem;">Ana Silva</span>
+        <img src="../image/icone.png" alt="Usuário" class="icone-usuario" />
         <a href="login.html" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
     </div>
     </nav>
@@ -28,7 +75,7 @@
 
     <div class="cabecalho-pagina">
         <h1>Meus produtos</h1>
-        <a href="cadastrar-produto.html" class="btn btn-primario" style="width:auto; padding: 10px 20px;">+ Novo produto</a>
+        <a href="cadastro-produto.html" class="btn btn-primario" style="width:auto; padding: 10px 20px;">+ Novo produto</a>
     </div>
 
     <div class="alerta alerta-aviso">
@@ -54,7 +101,7 @@
         <tr>
             <td>
             <div style="display:flex; align-items:center; gap: 10px;">
-                <span style="font-size:1.5rem;">💻</span>
+                <img src="../image/monitor.jpg" alt="Monitor" class="produto-img" />
                 <span>Monitor 24" Full HD</span>
             </div>
             </td>
@@ -62,42 +109,82 @@
             <td><span class="badge badge-aviso">1 interesse</span></td>
             <td>1</td>
             <td>
-            <a href="cadastrar-produto.html" class="btn btn-secundario" style="padding: 5px 12px; font-size:0.8rem;">Editar</a>
+            <!-- Tem interesse: só mostra Excluir, sem Editar -->
+            <button class="btn btn-perigo" style="padding: 5px 12px; font-size:0.8rem;">Excluir</button>
             </td>
         </tr>
         <tr>
             <td>
             <div style="display:flex; align-items:center; gap: 10px;">
-                <span style="font-size:1.5rem;">📚</span>
-                <span>Enciclopédia Barsa (10 vol.)</span>
+                <img src="../image/livroMarvel.jpg" alt="Livro Marvel" class="produto-img" />
+                <span>Livro Marvel</span>
             </div>
             </td>
             <td><span class="badge badge-verde">Livros</span></td>
             <td><span class="badge badge-cinza">Disponível</span></td>
             <td>0</td>
             <td>
-            <a href="cadastrar-produto.html" class="btn btn-secundario" style="padding: 5px 12px; font-size:0.8rem;">Editar</a>
+            <button class="btn btn-secundario" style="padding: 5px 12px; font-size:0.8rem;"
+                onclick="abrirEdicao('Livro Marvel', 'Livros', 'Livro em ótimo estado, sem marcas de uso.')">Editar</button>
+            <button class="btn btn-perigo" style="padding: 5px 12px; font-size:0.8rem;">Excluir</button>
             </td>
         </tr>
         <tr>
             <td>
             <div style="display:flex; align-items:center; gap: 10px;">
-                <span style="font-size:1.5rem;">🎮</span>
-                <span>Joystick PS4</span>
+                <img src="../image/controle.jpg" alt="Controle" class="produto-img" />
+                <span>Controle PS4</span>
             </div>
             </td>
             <td><span class="badge badge-verde">Games</span></td>
+            <td><span class="badge badge-cinza">Disponível</span></td>
+            <td>0</td>
             <td>
-            <span class="badge" style="background:#eafaf1; color: #1e8449;">Troca confirmada</span>
-            </td>
-            <td>—</td>
-            <td>
-            <a href="avaliar.html" class="btn btn-primario" style="padding: 5px 12px; font-size:0.8rem; width:auto;">Avaliar troca</a>
+            <button class="btn btn-secundario" style="padding: 5px 12px; font-size:0.8rem;"
+                onclick="abrirEdicao('Controle PS4', 'Games', 'Controle em perfeito estado, com cabo incluso.')">Editar</button>
+            <button class="btn btn-perigo" style="padding: 5px 12px; font-size:0.8rem;">Excluir</button>
             </td>
         </tr>
         </tbody>
     </table>
 
     </div>
+
+    <!-- Modal de edição -->
+    <div class="modal-overlay" id="modalEdicao">
+        <div class="modal-box">
+            <h2>Editar produto</h2>
+            <label>Título</label>
+            <input type="text" id="editTitulo" />
+            <label>Categoria</label>
+            <input type="text" id="editCategoria" />
+            <label>Descrição</label>
+            <textarea id="editDescricao"></textarea>
+            <div class="modal-acoes">
+                <button class="btn btn-secundario" style="width:auto; padding:8px 20px;" onclick="fecharModal()">Cancelar</button>
+                <button class="btn btn-primario" style="width:auto; padding:8px 20px;" onclick="salvarEdicao()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function abrirEdicao(titulo, categoria, descricao) {
+        document.getElementById('editTitulo').value = titulo;
+        document.getElementById('editCategoria').value = categoria;
+        document.getElementById('editDescricao').value = descricao;
+        document.getElementById('modalEdicao').classList.add('aberto');
+    }
+    function fecharModal() {
+        document.getElementById('modalEdicao').classList.remove('aberto');
+    }
+    function salvarEdicao() {
+        alert('Produto atualizado com sucesso!');
+        fecharModal();
+    }
+    document.getElementById('modalEdicao').addEventListener('click', function(e) {
+        if (e.target === this) fecharModal();
+    });
+    </script>
+
 </body>
 </html>

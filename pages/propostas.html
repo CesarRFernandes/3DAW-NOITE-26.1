@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Propostas — EcoEscambo</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        .proposta-img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .icone-usuario {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,8 +34,7 @@
         <li><a href="propostas.html" class="ativo">Propostas</a></li>
     </ul>
     <div class="navbar-usuario">
-        <div class="avatar">AS</div>
-        <span style="color:#fff; font-size:0.85rem;">Ana Silva</span>
+        <img src="../image/icone.png" alt="Usuário" class="icone-usuario" />
         <a href="login.html" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
     </div>
     </nav>
@@ -49,13 +64,13 @@
 
         <div class="proposta-itens">
             <div class="proposta-item-box">
-            <p style="font-size:1.5rem;">💻</p>
+            <img src="../image/monitor.jpg" alt="Monitor 24&quot;" class="proposta-img" />
             <p style="font-size:0.8rem; font-weight:600;">Seu Monitor 24"</p>
             <p style="font-size:0.75rem; color: var(--cinza-medio);">(você oferece)</p>
             </div>
             <div class="proposta-seta">&#8644;</div>
             <div class="proposta-item-box">
-            <p style="font-size:1.5rem;">📷</p>
+            <img src="../image/camera.jpg" alt="Câmera DSLR" class="proposta-img" />
             <p style="font-size:0.8rem; font-weight:600;">Câmera DSLR</p>
             <p style="font-size:0.75rem; color: var(--cinza-medio);">(João oferece)</p>
             </div>
@@ -64,7 +79,6 @@
         <div class="proposta-acoes">
             <button class="btn btn-primario" style="width:auto; padding: 8px 20px;" onclick="aceitarProposta(this)">Aceitar troca</button>
             <button class="btn btn-perigo" style="padding: 8px 20px;" onclick="recusarProposta(this)">Recusar</button>
-            <a href="explorar.html" class="btn btn-secundario" style="padding: 8px 20px; font-size: 0.875rem;">Ver produtos de João</a>
         </div>
 
         <div class="confirmacao-aceita alerta alerta-sucesso" style="display:none; margin-top:12px;">
@@ -92,14 +106,14 @@
 
         <div class="proposta-itens">
             <div class="proposta-item-box">
-            <p style="font-size:1.5rem;">📚</p>
-            <p style="font-size:0.8rem; font-weight:600;">Enciclopédia Barsa</p>
+            <img src="../image/livroMarvel.jpg" alt="Livro Marvel" class="proposta-img" />
+            <p style="font-size:0.8rem; font-weight:600;">Livro Marvel</p>
             <p style="font-size:0.75rem; color: var(--cinza-medio);">(você oferece)</p>
             </div>
             <div class="proposta-seta">&#8644;</div>
             <div class="proposta-item-box">
-            <p style="font-size:1.5rem;">🎸</p>
-            <p style="font-size:0.8rem; font-weight:600;">Violão folk</p>
+            <img src="../image/vialoafolk.jpg" alt="Violão" class="proposta-img" />
+            <p style="font-size:0.8rem; font-weight:600;">Violão</p>
             <p style="font-size:0.75rem; color: var(--cinza-medio);">(Carlos oferece)</p>
             </div>
         </div>
