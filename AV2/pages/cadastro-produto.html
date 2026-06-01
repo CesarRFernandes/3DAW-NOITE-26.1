@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ofertar produto — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+  <p class="link-voltar"><a href="meus-produtos.html">&larr; Meus produtos</a></p>
+
+  <div class="card card-formulario">
+    <h1 class="titulo-secao">Ofertar produto</h1>
+    <p class="subtitulo-secao">Preencha os dados do item que deseja trocar</p>
+
+    <form id="form-produto" novalidate>
+
+      <div class="grupo-campo">
+        <label for="nome-produto">Nome do produto</label>
+        <input type="text" id="nome-produto" name="nome-produto"
+               placeholder="Ex: Violão folk acústico" />
+        <span class="msg-erro" id="nome-produto-erro"></span>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="categoria">Categoria</label>
+        <select id="categoria" name="categoria">
+          <option value="">Selecione uma categoria</option>
+          <option>Eletrônicos</option>
+          <option>Livros</option>
+          <option>Roupas</option>
+          <option>Móveis</option>
+          <option>Esportes</option>
+          <option>Música</option>
+          <option>Games</option>
+          <option>Casa</option>
+          <option>Outros</option>
+        </select>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao"
+          placeholder="Descreva o estado do produto, o que está incluso…"
+          rows="4"></textarea>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="interesse">O que gostaria em troca? (opcional)</label>
+        <input type="text" id="interesse" name="interesse"
+               placeholder="Ex: Livros, eletrônicos, instrumentos…" />
+      </div>
+
+      <div class="form-acoes">
+        <a href="meus-produtos.html" class="btn btn-secundario">Cancelar</a>
+        <button type="submit" class="btn btn-primario"
+                id="btn-publicar" disabled>
+          Publicar produto
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+renderRodape();
+initCadastroProduto();
+renderNavbar('cadastro-produto.html');
+</script>
+</body>
+</html>

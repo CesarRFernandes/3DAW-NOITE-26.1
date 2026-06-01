@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ver interesses — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+  <div class="cabecalho-pagina">
+    <h1>Interesses nos seus produtos</h1>
+  </div>
+  <p class="subtitulo-secao">
+    Para cada interesse recebido, proponha um de seus produtos em troca
+    ou rejeite.
+  </p>
+
+  <div id="lista-interesses"></div>
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+(function () {
+  var sessao = exigirAutenticacao();
+  if (!sessao) return;
+
+  seedDados();
+  renderNavbar('ver-interesses.html');
+  renderRodape();
+
+  function renderizar() {
+    var interesses = getInteresses().filter(function (i) {
+      return i.emailOfertante === sessao.email && i.status === 'pendente';
+    });
+    var lista = document.getElementById('lista-interesses');
+
+    if (interesses.length === 0) {
+      lista.innerHTML =
+        '<div class="alerta alerta-aviso"><span>&#9888;</span>' +
+        '<span>Nenhum interesse pendente no momento.</span></div>';
+      return;
+    }
+
+    lista.innerHTML = interesses.map(function (interesse) {
+      var prodAlvo    = getProdutos().find(function (p) {
+        return p.id === interesse.produtoId;
+      });
+      var interessado = getUsuarios().find(function (u) {
+        return u.email === interesse.emailInteressado;
+      });
+      var prods       = getProdutos().filter(function (p) {
+        return p.email === interesse.emailInteressado && p.status === 'aberto';
+      });
+
+      var miniCards = prods.length
+        ? prods.map(function (p) {
+            return '<div class="produto-card-mini">' +
+              '<img src="' + p.foto + '" alt="' + p.titulo + '" />' +
+              '<div class="produto-card-mini-info">' + p.titulo + '</div>' +
+              '<button class="btn btn-primario btn-propor"' +
+              ' onclick="propor(\'' + interesse.id + '\',\'' + p.id + '\')">' +
+              'Propor</button>' +
+              '</div>';
+          }).join('')
+        : '<p class="aviso-vazio">Nenhum produto disponível deste utilizador.</p>';
+
+      return '<div class="card-interesse" id="int-' + interesse.id + '">' +
+        '<div class="card-interesse-header">' +
+          '<div>' +
+            '<p class="nome-interessado">' +
+              (interessado ? interessado.nome : interesse.emailInteressado) +
+            '</p>' +
+            '<p class="interesse-produto-alvo">Quer: <strong>' +
+              (prodAlvo ? prodAlvo.titulo : '?') + '</strong>' +
+            '</p>' +
+          '</div>' +
+          '<button class="btn btn-perigo btn-rejeitar"' +
+          ' onclick="rejeitarTodos(\'' + interesse.id + '\')">' +
+          'Não tenho interesse por nenhum</button>' +
+        '</div>' +
+        '<p class="label-produtos-interessado">Produtos de ' +
+          (interessado ? interessado.nome : '') + ':</p>' +
+        '<div class="lista-produtos-interessado">' + miniCards + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  window.propor = function (interesseId, produtoId) {
+    var interesses = getInteresses();
+    var interesse  = interesses.find(function (i) { return i.id === interesseId; });
+    if (!interesse) return;
+
+    var propostas = getPropostas();
+    propostas.push({
+      id:                  'prop' + Date.now(),
+      interesseId:         interesseId,
+      produtoInteressadoId: interesse.produtoId,
+      produtoOfertanteId:  produtoId,
+      emailOfertante:      sessao.email,
+      emailInteressado:    interesse.emailInteressado,
+      status:              'aguardando'
+    });
+    salvarPropostas(propostas);
+
+    /* Marca o interesse como "em proposta" */
+    interesses = interesses.map(function (i) {
+      if (i.id === interesseId) i.status = 'proposto';
+      return i;
+    });
+    salvarInteresses(interesses);
+
+    alert('Proposta enviada! O utilizador irá avaliá-la em "Análise de oferta".');
+    renderizar();
+  };
+
+  window.rejeitarTodos = function (interesseId) {
+    if (!confirm('Confirmar rejeição? O interesse será removido.')) return;
+    var interesses = getInteresses().map(function (i) {
+      if (i.id === interesseId) i.status = 'removido';
+      return i;
+    });
+    salvarInteresses(interesses);
+    renderizar();
+  };
+
+  renderizar();
+}());
+</script>
+</body>
+</html>

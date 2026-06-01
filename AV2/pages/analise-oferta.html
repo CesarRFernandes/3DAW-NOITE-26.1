@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análise de oferta — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+  <div class="cabecalho-pagina">
+    <h1>Análise de oferta</h1>
+  </div>
+  <p class="subtitulo-secao">
+    Propostas de troca que você recebeu. Aceite para efetivar a troca ou
+    recuse para manter os produtos no catálogo.
+  </p>
+
+  <div id="lista-propostas"></div>
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+(function () {
+  var sessao = exigirAutenticacao();
+  if (!sessao) return;
+
+  seedDados();
+  renderNavbar('analise-oferta.html');
+  renderRodape();
+
+  function renderizar() {
+    /*
+      O utilizador-INTERESSADO avalia as propostas que recebeu.
+      emailInteressado === sessao.email  → eu sou quem manifesta interesse.
+      O ofertante faz a proposta; eu aceito ou recuso.
+    */
+    var propostas = getPropostas().filter(function (p) {
+      return p.emailInteressado === sessao.email && p.status === 'aguardando';
+    });
+    var lista = document.getElementById('lista-propostas');
+
+    if (propostas.length === 0) {
+      lista.innerHTML =
+        '<div class="alerta alerta-aviso"><span>&#9888;</span>' +
+        '<span>Nenhuma proposta de troca pendente.</span></div>';
+      return;
+    }
+
+    lista.innerHTML = propostas.map(function (prop) {
+      var prodMeu    = getProdutos().find(function (p) {
+        return p.id === prop.produtoInteressadoId;
+      });
+      var prodOferta = getProdutos().find(function (p) {
+        return p.id === prop.produtoOfertanteId;
+      });
+      var ofertante  = getUsuarios().find(function (u) {
+        return u.email === prop.emailOfertante;
+      });
+
+      return '<div class="card-oferta-recebida" id="prop-' + prop.id + '">' +
+        '<div class="oferta-header">' +
+          '<p class="oferta-de">Proposta de <strong>' +
+            (ofertante ? ofertante.nome : prop.emailOfertante) + '</strong></p>' +
+          '<span class="badge badge-aviso">Aguardando decisão</span>' +
+        '</div>' +
+        '<div class="oferta-produtos">' +
+          '<div class="oferta-produto-box">' +
+            '<img src="' + (prodMeu ? prodMeu.foto : '') +
+            '" alt="' + (prodMeu ? prodMeu.titulo : '') + '" />' +
+            '<p class="oferta-produto-nome">' + (prodMeu ? prodMeu.titulo : '?') + '</p>' +
+            '<p class="oferta-produto-sub">você oferece</p>' +
+          '</div>' +
+          '<div class="oferta-seta">&#8644;</div>' +
+          '<div class="oferta-produto-box">' +
+            '<img src="' + (prodOferta ? prodOferta.foto : '') +
+            '" alt="' + (prodOferta ? prodOferta.titulo : '') + '" />' +
+            '<p class="oferta-produto-nome">' + (prodOferta ? prodOferta.titulo : '?') + '</p>' +
+            '<p class="oferta-produto-sub">' +
+              (ofertante ? ofertante.nome : '') + ' oferece' +
+            '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="oferta-acoes">' +
+          '<button class="btn btn-primario"' +
+          ' onclick="aceitarTroca(\'' + prop.id + '\')">Aceitar</button>' +
+          '<button class="btn btn-perigo"' +
+          ' onclick="recusarProposta(\'' + prop.id + '\')">Recusar</button>' +
+        '</div>' +
+        '<div class="alerta alerta-sucesso oferta-aceita"' +
+        ' id="aceito-' + prop.id + '">' +
+          '<span>&#10003;</span>' +
+          '<span id="msg-aceito-' + prop.id + '">Troca aceita!</span>' +
+        '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  window.aceitarTroca = function (propId) {
+    var propostas = getPropostas();
+    var prop      = propostas.find(function (p) { return p.id === propId; });
+    if (!prop) return;
+
+    /* Finaliza ambos os produtos */
+    salvarProdutos(getProdutos().map(function (p) {
+      if (p.id === prop.produtoInteressadoId || p.id === prop.produtoOfertanteId) {
+        p.status = 'finalizado';
+      }
+      return p;
+    }));
+
+    /* Atualiza a proposta */
+    salvarPropostas(propostas.map(function (p) {
+      if (p.id === propId) p.status = 'aceita';
+      return p;
+    }));
+
+    /* UI: esconde botões, mostra mensagem de contato */
+    var card   = document.getElementById('prop-' + propId);
+    var acoes  = card ? card.querySelector('.oferta-acoes') : null;
+    var msgEl  = document.getElementById('aceito-' + propId);
+    var msgTxt = document.getElementById('msg-aceito-' + propId);
+
+    if (acoes)  acoes.style.display  = 'none';
+    if (msgEl)  msgEl.style.display  = 'flex';
+    if (msgTxt) {
+      var ofertante = getUsuarios().find(function (u) {
+        return u.email === prop.emailOfertante;
+      });
+      msgTxt.innerHTML =
+        'Troca aceita! Entre em contato com <strong>' +
+        (ofertante ? ofertante.nome : prop.emailOfertante) +
+        '</strong> (' + prop.emailOfertante + ') para combinar a entrega. ' +
+        'Ambos os produtos foram retirados do catálogo.';
+    }
+  };
+
+  window.recusarProposta = function (propId) {
+    if (!confirm('Deseja recusar esta proposta?')) return;
+    salvarPropostas(getPropostas().map(function (p) {
+      if (p.id === propId) p.status = 'recusada';
+      return p;
+    }));
+    renderizar();
+  };
+
+  renderizar();
+}());
+</script>
+</body>
+</html>

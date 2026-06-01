@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produto — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+  <p class="link-voltar"><a href="explorar.html">&larr; Voltar ao catálogo</a></p>
+
+  <div class="detalhe-produto" id="detalhe-produto">
+
+    <div class="detalhe-imagem">
+      <img id="produto-foto" src="" alt="" />
+    </div>
+
+    <div class="detalhe-info">
+      <span class="badge badge-verde" id="produto-categoria"></span>
+      <h2 id="produto-titulo"></h2>
+      <p class="desc-produto" id="produto-desc"></p>
+
+      <div class="info-ofertante">
+        <div class="avatar" id="ofertante-avatar"></div>
+        <div>
+          <p class="ofertante-nome" id="ofertante-nome"></p>
+          <p class="ofertante-email" id="ofertante-email"></p>
+        </div>
+      </div>
+
+      <div id="area-interesse"></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+(function () {
+  seedDados();
+  renderNavbar('explorar.html');
+  renderRodape();
+
+  var sessao   = getSessao();
+  var params   = new URLSearchParams(window.location.search);
+  var id       = params.get('id');
+  var produtos = getProdutos();
+  var produto  = produtos.find(function (p) { return p.id === id; });
+
+  if (!produto) {
+    document.getElementById('detalhe-produto').innerHTML =
+      '<p>Produto não encontrado. <a href="explorar.html">Voltar</a></p>';
+    return;
+  }
+
+  document.title = produto.titulo + ' — EcoEscambo';
+  document.getElementById('produto-foto').src = produto.foto;
+  document.getElementById('produto-foto').alt = produto.titulo;
+  document.getElementById('produto-categoria').textContent = produto.categoria;
+  document.getElementById('produto-titulo').textContent    = produto.titulo;
+  document.getElementById('produto-desc').textContent      = produto.descricao;
+
+  var usuarios  = getUsuarios();
+  var ofertante = usuarios.find(function (u) { return u.email === produto.email; });
+  var nomeOfert = ofertante ? ofertante.nome : produto.email;
+  document.getElementById('ofertante-nome').textContent  = nomeOfert;
+  document.getElementById('ofertante-email').textContent = produto.email;
+
+  var iniciais = nomeOfert.split(' ').map(function (n) { return n[0]; })
+    .join('').slice(0, 2).toUpperCase();
+  document.getElementById('ofertante-avatar').textContent = iniciais;
+
+  var area = document.getElementById('area-interesse');
+
+  if (!sessao) {
+    area.innerHTML =
+      '<div class="alerta alerta-aviso"><span>&#9888;</span>' +
+      '<span>Faça <a href="login.html">login</a> para manifestar interesse.</span></div>';
+    return;
+  }
+
+  if (produto.email === sessao.email) {
+    area.innerHTML =
+      '<div class="alerta alerta-sucesso"><span>&#128230;</span>' +
+      '<span>Este produto é seu.</span></div>';
+    return;
+  }
+
+  var interesses  = getInteresses();
+  var jaRegistrou = interesses.find(function (i) {
+    return i.produtoId === id
+      && i.emailInteressado === sessao.email
+      && i.status !== 'removido';
+  });
+
+  if (jaRegistrou) {
+    area.innerHTML =
+      '<div class="alerta alerta-sucesso"><span>&#10003;</span>' +
+      '<span><strong>Interesse já registrado!</strong><br>' +
+      'Aguarde o contato do ofertante.<br><br>' +
+      '<a href="propostas.html">Acompanhar propostas &rarr;</a></span></div>';
+    return;
+  }
+
+  area.innerHTML =
+    '<button class="btn btn-primario" id="btn-interesse">Tenho interesse neste produto</button>' +
+    '<p class="dica-interesse">Ao manifestar interesse, o ofertante poderá ver seus produtos para propor uma troca.</p>' +
+    '<div class="alerta alerta-sucesso" id="confirmacao-interesse">' +
+      '<span>&#10003;</span>' +
+      '<span><strong>Seu interesse foi registrado com sucesso. Aguarde o contato do ofertante.</strong><br><br>' +
+      '<a href="propostas.html">Acompanhar propostas &rarr;</a></span>' +
+    '</div>';
+
+  document.getElementById('btn-interesse').addEventListener('click', function () {
+    var lista = getInteresses();
+    lista.push({
+      id:               'int' + Date.now(),
+      produtoId:        id,
+      emailInteressado: sessao.email,
+      emailOfertante:   produto.email,
+      status:           'pendente'
+    });
+    salvarInteresses(lista);
+    document.getElementById('btn-interesse').style.display     = 'none';
+    document.getElementById('confirmacao-interesse').style.display = 'flex';
+    document.querySelector('.dica-interesse').style.display    = 'none';
+  });
+}());
+</script>
+</body>
+</html>

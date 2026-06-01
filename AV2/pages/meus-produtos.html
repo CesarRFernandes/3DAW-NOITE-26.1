@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus produtos — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+
+  <div class="cabecalho-pagina">
+    <h1>Meus produtos</h1>
+    <a href="cadastro-produto.html" class="btn btn-primario btn-ofertar">
+      + Novo produto
+    </a>
+  </div>
+
+  <div id="alertas-interesse"></div>
+
+  <table class="tabela-meus-produtos" id="tabela">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Categoria</th>
+        <th>Status</th>
+        <th>Interesses</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <p class="aviso-vazio" id="msg-vazio">
+    Você ainda não tem produtos.
+    <a href="cadastro-produto.html">Cadastre um agora</a>.
+  </p>
+
+</div>
+
+<!-- Modal edição -->
+<div class="modal-overlay" id="modal-edicao">
+  <div class="modal-box">
+    <h2>Editar produto</h2>
+    <label for="editTitulo">Título</label>
+    <input type="text" id="editTitulo" />
+    <label for="editCategoria">Categoria</label>
+    <input type="text" id="editCategoria" />
+    <label for="editDescricao">Descrição</label>
+    <textarea id="editDescricao"></textarea>
+    <div class="modal-acoes">
+      <button class="btn btn-secundario btn-modal"
+              id="btn-cancelar-modal">Cancelar</button>
+      <button class="btn btn-primario btn-modal"
+              id="btn-salvar-edicao">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+(function () {
+  var sessao = exigirAutenticacao();
+  if (!sessao) return;
+
+  seedDados();
+  renderNavbar('meus-produtos.html');
+  renderRodape();
+
+  var editandoId = null;
+
+  function renderizar() {
+    var meusProdutos = getProdutos().filter(function (p) {
+      return p.email === sessao.email;
+    });
+    var interesses   = getInteresses();
+    var tbody        = document.getElementById('tbody');
+    var alertas      = document.getElementById('alertas-interesse');
+    var tabela       = document.getElementById('tabela');
+    var msgVazio     = document.getElementById('msg-vazio');
+
+    /* Alertas de interesse pendente */
+    var pendentes = interesses.filter(function (i) {
+      return i.emailOfertante === sessao.email && i.status === 'pendente';
+    });
+
+    alertas.innerHTML = pendentes.map(function (i) {
+      var p = getProdutos().find(function (pr) { return pr.id === i.produtoId; });
+      var u = getUsuarios().find(function (u) { return u.email === i.emailInteressado; });
+      return '<div class="alerta alerta-aviso alerta-interesse">' +
+        '<span>&#9888;</span>' +
+        '<span><strong>' + (u ? u.nome : i.emailInteressado) + '</strong> tem interesse em ' +
+        '<strong>' + (p ? p.titulo : 'seu produto') + '</strong>. ' +
+        '<a href="ver-interesses.html">Ver interesses &rarr;</a></span>' +
+        '</div>';
+    }).join('');
+
+    if (meusProdutos.length === 0) {
+      tabela.style.display  = 'none';
+      msgVazio.style.display = 'block';
+      return;
+    }
+
+    tabela.style.display  = '';
+    msgVazio.style.display = 'none';
+
+    tbody.innerHTML = meusProdutos.map(function (p) {
+      var qtd = interesses.filter(function (i) {
+        return i.produtoId === p.id && i.status === 'pendente';
+      }).length;
+
+      var statusBadge = p.status === 'finalizado'
+        ? '<span class="badge badge-cinza">Finalizada</span>'
+        : qtd > 0
+          ? '<span class="badge badge-aviso">' + qtd + ' interesse(s)</span>'
+          : '<span class="badge badge-cinza">Em aberto</span>';
+
+      var acoes = p.status === 'finalizado'
+        ? '<span class="txt-finalizado">Finalizado</span>'
+        : '<button class="btn btn-secundario btn-acao"' +
+          ' onclick="abrirEdicao(\'' + p.id + '\')">Editar</button>' +
+          '<button class="btn btn-perigo btn-acao"' +
+          ' onclick="excluirProduto(\'' + p.id + '\')">Excluir</button>';
+
+      return '<tr>' +
+        '<td><div class="produto-info-cell">' +
+          '<img src="' + p.foto + '" alt="' + p.titulo + '" class="produto-img" />' +
+          '<span>' + p.titulo + '</span>' +
+        '</div></td>' +
+        '<td><span class="badge badge-verde">' + p.categoria + '</span></td>' +
+        '<td>' + statusBadge + '</td>' +
+        '<td>' + qtd + '</td>' +
+        '<td class="td-acoes">' + acoes + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  /* Expõe funções usadas nos onclick do HTML dinâmico */
+  window.abrirEdicao = function (id) {
+    var p = getProdutos().find(function (pr) { return pr.id === id; });
+    if (!p) return;
+    editandoId = id;
+    document.getElementById('editTitulo').value    = p.titulo;
+    document.getElementById('editCategoria').value = p.categoria;
+    document.getElementById('editDescricao').value = p.descricao;
+    document.getElementById('modal-edicao').classList.add('aberto');
+  };
+
+  window.excluirProduto = function (id) {
+    if (!confirm('Deseja excluir este produto?')) return;
+    salvarProdutos(getProdutos().filter(function (p) { return p.id !== id; }));
+    renderizar();
+  };
+
+  document.getElementById('btn-cancelar-modal').addEventListener('click', fecharModal);
+  document.getElementById('btn-salvar-edicao').addEventListener('click', salvarEdicao);
+  document.getElementById('modal-edicao').addEventListener('click', function (e) {
+    if (e.target === this) fecharModal();
+  });
+
+  function fecharModal() {
+    document.getElementById('modal-edicao').classList.remove('aberto');
+    editandoId = null;
+  }
+
+  function salvarEdicao() {
+    if (!editandoId) return;
+    var produtos = getProdutos().map(function (p) {
+      if (p.id === editandoId) {
+        p.titulo    = document.getElementById('editTitulo').value.trim();
+        p.categoria = document.getElementById('editCategoria').value.trim();
+        p.descricao = document.getElementById('editDescricao').value.trim();
+      }
+      return p;
+    });
+    salvarProdutos(produtos);
+    fecharModal();
+    renderizar();
+  }
+
+  renderizar();
+}());
+</script>
+</body>
+</html>

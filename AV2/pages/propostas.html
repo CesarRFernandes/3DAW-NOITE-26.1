@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propostas — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+  <div class="cabecalho-pagina">
+    <h1>Propostas de troca</h1>
+  </div>
+
+  <div class="abas" id="abas-container">
+    <button class="aba ativa" data-aba="enviadas">
+      Interesses enviados
+    </button>
+    <button class="aba" data-aba="recebidas">
+      Propostas recebidas
+    </button>
+  </div>
+
+  <div id="aba-enviadas"></div>
+  <div id="aba-recebidas" class="aba-oculta"></div>
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+(function () {
+  var sessao = exigirAutenticacao();
+  if (!sessao) return;
+
+  seedDados();
+  renderNavbar('propostas.html');
+  renderRodape();
+
+  /* Troca de abas */
+  document.getElementById('abas-container').addEventListener('click', function (e) {
+    var btn = e.target.closest('.aba');
+    if (!btn) return;
+    document.querySelectorAll('.aba').forEach(function (a) {
+      a.classList.remove('ativa');
+    });
+    document.getElementById('aba-enviadas').classList.add('aba-oculta');
+    document.getElementById('aba-recebidas').classList.add('aba-oculta');
+    btn.classList.add('ativa');
+    document.getElementById('aba-' + btn.dataset.aba).classList.remove('aba-oculta');
+  });
+
+  var interesses = getInteresses();
+  var propostas  = getPropostas();
+  var produtos   = getProdutos();
+  var usuarios   = getUsuarios();
+
+  /* ── ABA: Interesses enviados (EU sou o interessado) ── */
+  var meusInteresses = interesses.filter(function (i) {
+    return i.emailInteressado === sessao.email;
+  });
+
+  var elEnv = document.getElementById('aba-enviadas');
+
+  if (meusInteresses.length === 0) {
+    elEnv.innerHTML =
+      '<div class="alerta alerta-aviso"><span>&#9888;</span>' +
+      '<span>Você ainda não manifestou interesse em nenhum produto. ' +
+      '<a href="explorar.html">Explorar &rarr;</a></span></div>';
+  } else {
+    elEnv.innerHTML = meusInteresses.map(function (i) {
+      var p         = produtos.find(function (pr) { return pr.id === i.produtoId; });
+      var ofertante = usuarios.find(function (u) { return u.email === i.emailOfertante; });
+      var labels    = {
+        pendente: 'Aguardando proposta do ofertante',
+        proposto: 'Proposta recebida — avalie em Análise de oferta',
+        removido: 'Rejeitado pelo ofertante'
+      };
+      var classes   = { pendente: 'badge-aviso', proposto: 'badge-verde', removido: 'badge-cinza' };
+
+      return '<div class="card-proposta ' + (i.status === 'pendente' ? 'pendente' : '') + '">' +
+        '<div class="proposta-header">' +
+          '<div>' +
+            '<p class="proposta-produto">Produto: <strong>' +
+              (p ? p.titulo : '?') + '</strong></p>' +
+            '<p class="proposta-ofertante">Ofertante: ' +
+              (ofertante ? ofertante.nome : i.emailOfertante) + '</p>' +
+          '</div>' +
+          '<span class="badge ' + (classes[i.status] || 'badge-cinza') + '">' +
+            (labels[i.status] || i.status) +
+          '</span>' +
+        '</div>' +
+        (i.status === 'proposto'
+          ? '<div class="proposta-acoes">' +
+            '<a href="analise-oferta.html" class="btn btn-primario btn-proposta">' +
+            'Avaliar proposta</a></div>'
+          : '') +
+        '</div>';
+    }).join('');
+  }
+
+  /* ── ABA: Propostas recebidas (EU avalio) ── */
+  var propostasRecebi = propostas.filter(function (p) {
+    return p.emailInteressado === sessao.email;
+  });
+
+  var elRec = document.getElementById('aba-recebidas');
+
+  if (propostasRecebi.length === 0) {
+    elRec.innerHTML =
+      '<div class="alerta alerta-aviso"><span>&#9888;</span>' +
+      '<span>Nenhuma proposta recebida ainda.</span></div>';
+  } else {
+    elRec.innerHTML = propostasRecebi.map(function (prop) {
+      var prodMeu   = produtos.find(function (p) {
+        return p.id === prop.produtoInteressadoId;
+      });
+      var prodOfert = produtos.find(function (p) {
+        return p.id === prop.produtoOfertanteId;
+      });
+      var ofertante = usuarios.find(function (u) {
+        return u.email === prop.emailOfertante;
+      });
+      var statusMap = {
+        aguardando: 'Aguardando sua decisão',
+        aceita:     'Troca aceita',
+        recusada:   'Recusada'
+      };
+      var classBadge = {
+        aguardando: 'badge-aviso',
+        aceita:     'badge-verde',
+        recusada:   'badge-cinza'
+      };
+
+      return '<div class="card-proposta ' +
+        (prop.status === 'aguardando' ? 'pendente' : '') + '">' +
+        '<div class="proposta-header">' +
+          '<div>' +
+            '<p class="proposta-produto">Proposta de <strong>' +
+              (ofertante ? ofertante.nome : prop.emailOfertante) + '</strong></p>' +
+          '</div>' +
+          '<span class="badge ' + (classBadge[prop.status] || 'badge-cinza') + '">' +
+            (statusMap[prop.status] || prop.status) + '</span>' +
+        '</div>' +
+        '<div class="proposta-itens">' +
+          '<div class="proposta-item-box">' +
+            '<img src="' + (prodMeu ? prodMeu.foto : '') +
+            '" class="proposta-img" alt="" />' +
+            '<p class="proposta-item-nome">' + (prodMeu ? prodMeu.titulo : '?') + '</p>' +
+            '<p class="proposta-item-sub">você oferece</p>' +
+          '</div>' +
+          '<div class="proposta-seta">&#8644;</div>' +
+          '<div class="proposta-item-box">' +
+            '<img src="' + (prodOfert ? prodOfert.foto : '') +
+            '" class="proposta-img" alt="" />' +
+            '<p class="proposta-item-nome">' + (prodOfert ? prodOfert.titulo : '?') + '</p>' +
+            '<p class="proposta-item-sub">' +
+              (ofertante ? ofertante.nome : '') + ' oferece' +
+            '</p>' +
+          '</div>' +
+        '</div>' +
+        (prop.status === 'aguardando'
+          ? '<div class="proposta-acoes">' +
+            '<a href="analise-oferta.html" class="btn btn-primario btn-proposta">' +
+            'Avaliar proposta</a></div>'
+          : '') +
+        '</div>';
+    }).join('');
+  }
+}());
+</script>
+</body>
+</html>

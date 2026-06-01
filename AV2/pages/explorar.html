@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explorar — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+
+  <div class="cabecalho-pagina">
+    <h1>Explorar produtos</h1>
+    <div id="acao-ofertar"></div>
+  </div>
+
+  <div class="barra-filtros">
+    <div class="campo-busca">
+      <span class="icone-busca">&#128269;</span>
+      <input type="text" id="busca" placeholder="Buscar produto…" />
+    </div>
+    <select id="filtro-categoria">
+      <option value="">Todas as categorias</option>
+      <option>Eletrônicos</option>
+      <option>Livros</option>
+      <option>Roupas</option>
+      <option>Móveis</option>
+      <option>Esportes</option>
+      <option>Música</option>
+      <option>Games</option>
+      <option>Casa</option>
+      <option>Outros</option>
+    </select>
+    <select id="filtro-ordem">
+      <option value="recente">Mais recentes</option>
+      <option value="az">A–Z</option>
+    </select>
+  </div>
+
+  <div class="grade-produtos" id="grade-produtos"></div>
+  <div class="paginacao" id="paginacao"></div>
+
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+(function () {
+  seedDados();
+  renderNavbar('explorar.html');
+  renderRodape();
+
+  var sessao    = getSessao();
+  var POR_PAGINA = 6;
+  var pagina    = 1;
+
+  /* Botão ofertar — só para autenticados */
+  if (sessao) {
+    document.getElementById('acao-ofertar').innerHTML =
+      '<a href="cadastro-produto.html" class="btn btn-primario btn-ofertar">+ Ofertar produto</a>';
+  }
+
+  function renderizar() {
+    var busca  = document.getElementById('busca').value.toLowerCase();
+    var cat    = document.getElementById('filtro-categoria').value;
+    var ordem  = document.getElementById('filtro-ordem').value;
+
+    var todos = getProdutos().filter(function (p) {
+      return p.status === 'aberto'
+        && (!cat   || p.categoria === cat)
+        && (!busca || p.titulo.toLowerCase().indexOf(busca) !== -1
+                   || p.descricao.toLowerCase().indexOf(busca) !== -1);
+    });
+
+    if (ordem === 'az') {
+      todos.sort(function (a, b) { return a.titulo.localeCompare(b.titulo); });
+    } else {
+      todos.reverse();
+    }
+
+    var total    = todos.length;
+    var inicio   = (pagina - 1) * POR_PAGINA;
+    var pagItems = todos.slice(inicio, inicio + POR_PAGINA);
+    var totalPag = Math.max(1, Math.ceil(total / POR_PAGINA));
+
+    var grade = document.getElementById('grade-produtos');
+
+    if (pagItems.length === 0) {
+      grade.innerHTML = '<p class="aviso-vazio">Nenhum produto encontrado.</p>';
+    } else {
+      grade.innerHTML = pagItems.map(function (p) {
+        var ehMeu = sessao && p.email === sessao.email;
+        var btn   = sessao && !ehMeu
+          ? '<a href="detalhe-produto.html?id=' + p.id +
+            '" class="btn btn-primario btn-card">Tenho interesse</a>'
+          : '<a href="detalhe-produto.html?id=' + p.id +
+            '" class="btn btn-secundario btn-card">Ver detalhes</a>';
+
+        return '<div class="card-produto">' +
+          '<div class="card-produto-imagem">' +
+            '<img src="' + p.foto + '" alt="' + p.titulo + '" />' +
+          '</div>' +
+          '<div class="card-produto-corpo">' +
+            '<p class="card-produto-titulo">' + p.titulo + '</p>' +
+            '<p class="card-produto-desc">' + p.descricao + '</p>' +
+            '<div class="card-produto-rodape">' +
+              '<span class="badge badge-verde">' + p.categoria + '</span>' +
+              btn +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    /* Paginação */
+    var pag = document.getElementById('paginacao');
+    pag.innerHTML = '';
+    for (var i = 1; i <= totalPag; i++) {
+      var a     = document.createElement('a');
+      a.textContent = i;
+      if (i === pagina) a.className = 'ativa';
+      a.dataset.p = i;
+      a.addEventListener('click', function () {
+        pagina = parseInt(this.dataset.p);
+        renderizar();
+        window.scrollTo(0, 0);
+      });
+      pag.appendChild(a);
+    }
+  }
+
+  document.getElementById('busca').addEventListener('input', function () {
+    pagina = 1; renderizar();
+  });
+  document.getElementById('filtro-categoria').addEventListener('change', function () {
+    pagina = 1; renderizar();
+  });
+  document.getElementById('filtro-ordem').addEventListener('change', function () {
+    pagina = 1; renderizar();
+  });
+
+  renderizar();
+}());
+</script>
+</body>
+</html>

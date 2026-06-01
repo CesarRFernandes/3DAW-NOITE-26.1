@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avaliar troca — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="conteudo">
+  <p class="link-voltar"><a href="propostas.html">&larr; Propostas</a></p>
+
+  <div class="card card-formulario" id="area-avaliacao">
+    <h1 class="titulo-secao">Avaliar troca</h1>
+    <p class="subtitulo-secao" id="subtitulo-avaliacao">
+      Sua experiência importa para a comunidade EcoEscambo
+    </p>
+
+    <div class="divider"></div>
+
+    <form id="form-avaliacao" novalidate>
+
+      <div class="grupo-campo">
+        <label>Avalie sua experiência</label>
+        <div class="estrelas" id="estrelas">
+          <span class="estrela" data-val="1">&#9733;</span>
+          <span class="estrela" data-val="2">&#9733;</span>
+          <span class="estrela" data-val="3">&#9733;</span>
+          <span class="estrela" data-val="4">&#9733;</span>
+          <span class="estrela" data-val="5">&#9733;</span>
+        </div>
+        <span class="label-estrela" id="label-estrela"></span>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="comentario">Comentário (opcional)</label>
+        <textarea id="comentario" name="comentario"
+          placeholder="Conte como foi a experiência da troca…" rows="3">
+        </textarea>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="aviso-denuncia">
+        Se o acordo não foi cumprido, você pode denunciar o utilizador.
+      </p>
+
+      <div class="form-acoes">
+        <button type="submit" class="btn btn-primario"
+                id="btn-avaliar">Enviar avaliação</button>
+        <button type="button" class="btn btn-perigo"
+                id="btn-denunciar">Denunciar</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Confirmação pós-avaliação -->
+  <div class="card card-formulario avaliacao-confirmada" id="area-confirmacao">
+    <p class="emoji-confirmacao">&#127807;</p>
+    <h2 class="titulo-confirmacao">Avaliação enviada!</h2>
+    <p class="subtitulo-confirmacao">
+      Obrigado por contribuir com a comunidade EcoEscambo.
+    </p>
+    <a href="explorar.html" class="btn btn-primario btn-continuar">
+      Continuar explorando
+    </a>
+  </div>
+</div>
+
+<div id="rodape-placeholder"></div>
+
+<script src="../js/validacao.js"></script>
+<script src="../js/componentes.js"></script>
+<script>
+(function () {
+  var sessao = exigirAutenticacao();
+  if (!sessao) return;
+
+  seedDados();
+  renderNavbar('avaliar.html');
+  renderRodape();
+
+  /* Preenche subtítulo se vier com proposta */
+  var params  = new URLSearchParams(window.location.search);
+  var propId  = params.get('proposta');
+  if (propId) {
+    var prop      = getPropostas().find(function (p) { return p.id === propId; });
+    var ofertante = prop
+      ? getUsuarios().find(function (u) { return u.email === prop.emailOfertante; })
+      : null;
+    var sub = document.getElementById('subtitulo-avaliacao');
+    if (sub && ofertante) {
+      sub.textContent = 'Troca com ' + ofertante.nome;
+    }
+  }
+
+  var notaEscolhida = 0;
+  var labels        = ['', 'Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'];
+
+  document.getElementById('estrelas').addEventListener('click', function (e) {
+    var estrela = e.target.closest('.estrela');
+    if (!estrela) return;
+    notaEscolhida = parseInt(estrela.dataset.val);
+    document.querySelectorAll('.estrela').forEach(function (s, i) {
+      s.classList.toggle('ativa', i < notaEscolhida);
+    });
+    document.getElementById('label-estrela').textContent =
+      labels[notaEscolhida] || '';
+  });
+
+  document.getElementById('form-avaliacao').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('area-avaliacao').style.display     = 'none';
+    document.getElementById('area-confirmacao').style.display   = 'block';
+  });
+
+  document.getElementById('btn-denunciar').addEventListener('click', function () {
+    if (confirm('Deseja denunciar este utilizador por descumprimento de acordo?')) {
+      alert('Denúncia registrada. Nossa equipe irá analisar o caso.');
+      window.location.href = 'meus-produtos.html';
+    }
+  });
+}());
+</script>
+</body>
+</html>

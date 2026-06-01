@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova senha — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+<div class="pagina-central">
+  <div class="card">
+
+    <div class="logo">
+      <a href="login.html">
+        <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+      </a>
+    </div>
+
+    <h1 class="titulo-secao">Redefinir senha</h1>
+    <p class="subtitulo-secao">Crie uma nova senha segura para sua conta</p>
+
+    <form id="form-nova-senha" novalidate>
+
+      <div class="grupo-campo">
+        <label for="senha">Nova senha</label>
+        <div class="campo-senha-wrap">
+          <input type="password" id="senha" name="senha"
+                 placeholder="Crie uma senha segura"
+                 autocomplete="new-password" />
+          <button class="eye-btn" type="button" aria-label="Mostrar senha">
+            <img class="eye-icon"
+                 src="https://img.icons8.com/ios-glyphs/30/000000/invisible.png"
+                 alt="olho" />
+          </button>
+        </div>
+        <div class="forca-senha">
+          <div class="forca-barra">
+            <div class="forca-progresso" id="forca-progresso"></div>
+          </div>
+          <span class="forca-texto" id="forca-texto"></span>
+        </div>
+        <span class="msg-dica">Mínimo 6 caracteres, maiúsculas, minúsculas e números.</span>
+        <span class="msg-erro" id="senha-erro"></span>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="senha-conf">Confirmar nova senha</label>
+        <div class="campo-senha-wrap">
+          <input type="password" id="senha-conf" name="senha-conf"
+                 placeholder="Repita a nova senha"
+                 autocomplete="new-password" />
+          <button class="eye-btn" type="button"
+                  aria-label="Mostrar confirmação">
+            <img class="eye-icon"
+                 src="https://img.icons8.com/ios-glyphs/30/000000/invisible.png"
+                 alt="olho" />
+          </button>
+        </div>
+        <span class="msg-erro" id="conf-erro"></span>
+      </div>
+
+      <button class="btn btn-primario" type="submit">Salvar nova senha</button>
+
+    </form>
+
+    <div class="divider"></div>
+    <div class="links-extras">
+      <a href="login.html">&larr; Voltar ao login</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="../js/validacao.js"></script>
+<script>initNovaSenha();</script>
+</body>
+</html>
