@@ -48,7 +48,7 @@
         <a href="recuperar-senha.html" style="font-size: 0.85rem;">Esqueci minha senha</a>
     </div>
 
-    <button class="btn btn-primario" type="submit" id="btn-entrar" disabled>Entrar</button>
+    <button class="btn btn-primario" type="submit" id="btn-entrar" disabled>Entrar no sistema</button>
 
     </form>
 
@@ -60,7 +60,9 @@
 </div>
 </div>
 
+    <script src="../js/eco-db.js"></script>
+    <script>if (window.EcoDB) EcoDB.ensureSeed();</script>
     <script src="../js/validacao.js"></script>
-<script>initLogin();</script>
+    <script>initLogin();</script>
 </body>
 </html>

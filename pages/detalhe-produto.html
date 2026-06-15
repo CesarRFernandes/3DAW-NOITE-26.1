@@ -71,7 +71,6 @@
             <button
               class="btn btn-primario"
               id="btn-interesse"
-              onclick="manifestarInteresse()"
               style="margin-bottom: 12px;"
             >
               Tenho interesse neste produto
@@ -97,136 +96,12 @@
 
     </div>
 
+    <script src="../js/eco-db.js"></script>
+    <script src="../js/eco-auth.js"></script>
+    <script src="../js/eco-t2.js"></script>
     <script>
-    // Catálogo de produtos com dados reais
-    const produtos = {
-      'livros-tecnicos': {
-        titulo: 'Coleção de livros técnicos',
-        categoria: 'Livros',
-        foto: '../image/livro.jpg',
-        desc: '5 livros de programação em ótimo estado de conservação: Estruturas de dados e algoritimos com JavaScript, Princípios de orientação a objetos em JavaScript, Introdução a linguagem SQL, Introdução à linguagem Go e Marketing 4.0. Ótima oportunidade para quem está estudando desenvolvimento.',
-        ofertante: 'Ana Paula',
-        iniciais: 'AP',
-        trocas: '★★★★★ &nbsp;(8 trocas realizadas)',
-      },
-      'violao': {
-        titulo: 'Violão acústico',
-        categoria: 'Música',
-        foto: '../image/vialoafolk.jpg',
-        desc: 'Violão em excelente estado de conservação. Pouco uso, sem arranhões ou danos. Afinador de clip incluso. Ideal para iniciantes ou para quem quer retomar a prática. Encordoamento novo trocado recentemente.',
-        ofertante: 'Carlos Mendes',
-        iniciais: 'CM',
-        trocas: '★★★★☆ &nbsp;(12 trocas realizadas)',
-      },
-      'celular': {
-        titulo: 'Telefone Motorola',
-        categoria: 'Eletrônicos',
-        foto: '../image/celular.jpg',
-        desc: 'Telefone Motorola em funcionamento perfeito. Tela sem trincas, bateria com boa autonomia. Carregador original incluso. Desbloqueado para todas as operadoras. Motivo da troca: upgrade de aparelho.',
-        ofertante: 'Beatriz Lima',
-        iniciais: 'BL',
-        trocas: '★★★★☆ &nbsp;(5 trocas realizadas)',
-      },
-      'bicicleta': {
-        titulo: 'Bicicleta urbana',
-        categoria: 'Esportes',
-        foto: '../image/bicicleta.jpg',
-        desc: 'Bicicleta urbana usada em bom estado. Freios revisados recentemente, câmbio funcionando perfeitamente. Aro 26, ideal para uso diário na cidade. Aceita qualquer tipo de troca relacionada a esportes ou eletrônicos.',
-        ofertante: 'Ricardo Oliveira',
-        iniciais: 'RO',
-        trocas: '★★★★★ &nbsp;(20 trocas realizadas)',
-      },
-      'jardinagem': {
-        titulo: 'Kit de jardinagem',
-        categoria: 'Casa',
-        foto: '../image/kitjardinagem.jpg',
-        desc: 'Kit completo de jardinagem: pá, garfo, transplantador, tesoura de poda, avental de lona e bolsa organizadora. Todas as ferramentas em aço inoxidável resistente à ferrugem. Usado apenas uma vez, em perfeito estado.',
-        ofertante: 'Mariana Costa',
-        iniciais: 'MC',
-        trocas: '★★★☆☆ &nbsp;(3 trocas realizadas)',
-      },
-      'console': {
-        titulo: 'Console retrô + 2 controles',
-        categoria: 'Games',
-        foto: '../image/videogame.jpg',
-        desc: 'PlayStation 2 com dois controles originais em ótimo estado. Funciona perfeitamente com qualquer TV moderna (adaptador HDMI incluso). Saudade garantida!',
-        ofertante: 'Felipe Santos',
-        iniciais: 'FS',
-        trocas: '★★★★★ &nbsp;(15 trocas realizadas)',
-      },
-      'camera': {
-        titulo: 'Câmera fotográfica',
-        categoria: 'Eletrônicos',
-        foto: '../image/camera.jpg',
-        desc: 'Câmera digital compacta em excelente estado. Lente original 28-200mm inclusa. Bateria com boa autonomia, carregador e bolsa protetora inclusos. Ideal para fotografia casual ou viagens. Motivo da troca: migrei para câmera mirrorless.',
-        ofertante: 'Juliana Ramos',
-        iniciais: 'JR',
-        trocas: '★★★★☆ &nbsp;(9 trocas realizadas)',
-      },
-      'monitor': {
-        titulo: 'Monitor 24" Full HD',
-        categoria: 'Eletrônicos',
-        foto: '../image/monitor.jpg',
-        desc: 'Monitor 24 polegadas Full HD (1920x1080) em ótimo estado. Sem dead pixels, brilho uniforme. Entradas VGA e HDMI. Cabo HDMI incluso. Base ajustável em altura. Ideal para home office ou gaming casual.',
-        ofertante: 'Thiago Nunes',
-        iniciais: 'TN',
-        trocas: '★★★★★ &nbsp;(11 trocas realizadas)',
-      },
-      'marvel': {
-        titulo: 'Coleção Marvel',
-        categoria: 'Livros',
-        foto: '../image/livroMarvel.jpg',
-        desc: 'Coleção de HQs da Marvel em ótima conservação. 8 volumes das histórias clássicas dos Vingadores, X-Men e Homem-Aranha. Capas duras, sem rasuras ou manchas. Uma raridade para fãs dos quadrinhos.',
-        ofertante: 'Diego Alves',
-        iniciais: 'DA',
-        trocas: '★★★★☆ &nbsp;(6 trocas realizadas)',
-      },
-      'controle': {
-        titulo: 'Controle sem fio',
-        categoria: 'Games',
-        foto: '../image/controle.jpg',
-        desc: 'Controle sem fio compatível com PC (Windows/Linux) e consoles. Conexão USB e Bluetooth. Gatilhos analógicos, vibração dupla. Pouco uso, sem defeitos. Bateria recarregável com longa duração. Cabo USB-C incluso.',
-        ofertante: 'Lucas Ferreira',
-        iniciais: 'LF',
-        trocas: '★★★★★ &nbsp;(7 trocas realizadas)',
-      },
-    };
-
-    function manifestarInteresse() {
-      document.getElementById('area-interesse').style.display = 'none';
-      document.getElementById('confirmacao-interesse').style.display = 'flex';
-    }
-
-    // Carrega os dados do produto com base no ?id= na URL
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-      const produto = produtos[id];
-
-      if (!produto) {
-        document.getElementById('detalhe-produto').innerHTML =
-          '<p style="padding:20px;">Produto não encontrado. <a href="explorar.html">Voltar à exploração</a></p>';
-        return;
-      }
-
-      document.title = produto.titulo + ' — EcoEscambo';
-      document.getElementById('produto-foto').src = produto.foto;
-      document.getElementById('produto-foto').alt = produto.titulo;
-      document.getElementById('produto-categoria').textContent = produto.categoria;
-      document.getElementById('produto-titulo').textContent = produto.titulo;
-      document.getElementById('produto-desc').textContent = produto.desc;
-      document.getElementById('ofertante-avatar').textContent = produto.iniciais;
-      document.getElementById('ofertante-nome').textContent = produto.ofertante;
-      document.getElementById('ofertante-avaliacoes').innerHTML = produto.trocas;
-
-      // Atualiza mensagem de confirmação com nome do ofertante
-      const confirmEl = document.getElementById('confirmacao-interesse');
-      confirmEl.querySelector('span:last-child').innerHTML =
-        '<strong>Interesse registrado!</strong><br/>' +
-        produto.ofertante + ' receberá um e-mail e poderá ver seus produtos. ' +
-        'Se tiver interesse, enviará uma proposta de troca.' +
-        '<br/><br/><a href="propostas.html" style="color:inherit;font-weight:600;">Acompanhar propostas &#8594;</a>';
-    })();
+      EcoAuth.requireAuth();
+      EcoT2.initDetalhe();
     </script>
 
 </body>

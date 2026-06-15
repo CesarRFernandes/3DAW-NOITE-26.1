@@ -100,8 +100,26 @@ function initLogin() {
       return;
     }
 
+    if (usuario.ativo === false && !campoEmail.value.trim().toLowerCase().endsWith('@mailinator.com')) {
+      alert('Conta desativada. Ative sua conta com o link enviado para seu e-mail.');
+      return;
+    }
+
     salvarSessao({ nome: usuario.nome, email: usuario.email });
-    window.location.href = 'explorar.html';
+
+    var next = new URLSearchParams(window.location.search).get('next');
+    if (next) {
+      try {
+        window.location.href = decodeURIComponent(next);
+        return;
+      } catch (e) { /* fallthrough */ }
+    }
+
+    var interesses = JSON.parse(localStorage.getItem('eco_interesses') || '[]');
+    var propostas = JSON.parse(localStorage.getItem('eco_propostas') || '[]');
+    var tem = interesses.some(function (i) { return i.ofertanteEmail === usuario.email; }) ||
+      propostas.some(function (p) { return p.interessadoEmail === usuario.email && p.status === 'pendente'; });
+    window.location.href = tem ? 'propostas.html' : 'explorar.html';
   });
 }
 
@@ -140,7 +158,7 @@ function initCadastro() {
       barraForca.style.width = '0%';
       if (textoForca) textoForca.textContent = '';
     }
-    if (btnCadastrar) btnCadastrar.disabled = !(emailOk && nomeOk && senhaResult.valida && confOk);
+    if (btnCadastrar) btnCadastrar.disabled = !emailOk;
   }
 
   [campoEmail, campoNome, campoSenha, campoConf].forEach(function(c) {
@@ -151,32 +169,59 @@ function initCadastro() {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     var senhaResult = validarSenha(campoSenha.value);
-    if (!senhaResult.valida || campoSenha.value !== campoConf.value) return;
+    var emailOk = emailValido(campoEmail.value);
+    var nomeOk = campoNome.value.trim().length >= 2;
+    var confOk = campoSenha.value === campoConf.value && campoConf.value.length > 0;
+
+    setEstadoCampo(campoEmail, spanEmail, emailOk || !campoEmail.value, 'E-mail inválido.');
+    setEstadoCampo(campoNome, spanNome, nomeOk || !campoNome.value, 'Nome deve ter ao menos 2 caracteres.');
+    setEstadoCampo(campoSenha, spanSenha, senhaResult.valida || !campoSenha.value, senhaResult.mensagem);
+    setEstadoCampo(campoConf, spanConf, confOk || !campoConf.value, 'As senhas não coincidem.');
+    if (!emailOk || !nomeOk || !senhaResult.valida || !confOk) return;
 
     var usuarios = getUsuarios();
-    var jaExiste = usuarios.some(function(u) {
-      return u.email === campoEmail.value.trim();
-    });
-
-    if (jaExiste) {
-      if (spanEmail) spanEmail.textContent = 'Este e-mail já está cadastrado.';
+    if (usuarios.some(function(u) { return u.email === campoEmail.value.trim(); })) {
       setEstadoCampo(campoEmail, spanEmail, false, 'Este e-mail já está cadastrado.');
       return;
     }
 
+    var novoId = usuarios.reduce(function (m, u) { return Math.max(m, u.id || 0); }, 0) + 1;
     usuarios.push({
-      nome:  campoNome.value.trim(),
+      id: novoId,
+      nome: campoNome.value.trim(),
       email: campoEmail.value.trim(),
-      senha: campoSenha.value
+      senha: campoSenha.value,
+      ativo: false
     });
     salvarUsuarios(usuarios);
 
-    // Já inicia sessão automaticamente
-    salvarSessao({ nome: campoNome.value.trim(), email: campoEmail.value.trim() });
-
-    alert('Conta criada com sucesso! Bem-vindo(a), ' + campoNome.value.trim() + '!');
-    window.location.href = 'explorar.html';
+    var sucesso = document.getElementById('cadastro-sucesso');
+    var texto = document.getElementById('cadastro-sucesso-texto');
+    if (sucesso && texto) {
+      texto.innerHTML =
+        'Utilizador registrado com sucesso. Ative sua conta com o link enviado para seu e-mail. ' +
+        '<a href="confirmar-conta.html?id=' + novoId + '">Ativar conta</a>';
+      sucesso.style.display = 'flex';
+      form.style.display = 'none';
+    } else {
+      alert('Utilizador registrado com sucesso. Ative sua conta com o link enviado para seu e-mail.');
+    }
   });
+}
+
+function initConfirmacaoConta() {
+  var texto = document.getElementById('confirmacao-texto');
+  if (!texto) return;
+  var id = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
+  var usuarios = getUsuarios();
+  var u = usuarios.find(function (x) { return x.id === id; });
+  if (!u) {
+    texto.textContent = 'Link inválido.';
+    return;
+  }
+  u.ativo = true;
+  salvarUsuarios(usuarios);
+  texto.textContent = 'Conta relativa ao e-mail ' + u.email + ' foi desbloqueada com sucesso.';
 }
 
 // RECUPERAR SENHA

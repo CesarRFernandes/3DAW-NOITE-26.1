@@ -12,13 +12,9 @@
         object-fit: cover;
         border-radius: 6px 6px 0 0;
       }
-      .card-produto-imagem {
-        font-size: 0;
-        overflow: hidden;
-      }
+      .card-produto-imagem { font-size: 0; overflow: hidden; }
     </style>
 </head>
-
 <body>
 
     <nav class="navbar">
@@ -32,7 +28,8 @@
     </ul>
     <div class="navbar-usuario">
         <img src="../image/icone.png" alt="Usuário" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" />
-        <a href="login.html" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
+        <span id="navbar-nome" style="font-size:0.85rem;"></span>
+        <a href="#" id="btn-sair" style="color: rgba(255,255,255,0.7); font-size:0.8rem; margin-left:8px;">Sair</a>
     </div>
     </nav>
 
@@ -52,103 +49,21 @@
         <option>Todas as categorias</option>
         <option>Eletrônicos</option>
         <option>Livros</option>
-        <option>Roupas</option>
-        <option>Móveis</option>
-        <option>Esportes</option>
-        <option>Outros</option>
-        </select>
-        <select style="width: auto;">
-        <option>Mais recentes</option>
-        <option>A-Z</option>
         </select>
     </div>
 
-    <div class="grade-produtos">
+    <div id="grid-produtos" class="grade-produtos"></div>
+    <div id="paginacao" class="paginacao"></div>
 
-        <div class="card-produto">
-        <div class="card-produto-imagem">
-            <img src="../image/livro.jpg" alt="Coleção de livros técnicos" />
-        </div>
-        <div class="card-produto-corpo">
-            <p class="card-produto-titulo">Coleção de livros técnicos</p>
-            <p class="card-produto-desc">5 livros de programação em ótimo estado. SQL, JavaScript e mais.</p>
-            <div class="card-produto-rodape">
-            <span class="badge badge-verde">Livros</span>
-            <a href="detalhe-produto.html?id=livros-tecnicos" class="btn btn-secundario" style="padding: 5px 12px; font-size: 0.8rem;">Ver detalhes</a>
-            </div>
-        </div>
-        </div>
-
-        <div class="card-produto">
-        <div class="card-produto-imagem">
-            <img src="../image/vialoafolk.jpg" alt="Violão acústico" />
-        </div>
-        <div class="card-produto-corpo">
-            <p class="card-produto-titulo">Violão acústico</p>
-            <p class="card-produto-desc">Violão em bom estado, afinador incluso. Pouco uso.</p>
-            <div class="card-produto-rodape">
-            <span class="badge badge-verde">Música</span>
-            <a href="detalhe-produto.html?id=violao" class="btn btn-secundario" style="padding: 5px 12px; font-size: 0.8rem;">Ver detalhes</a>
-            </div>
-        </div>
-        </div>
-
-        <div class="card-produto">
-        <div class="card-produto-imagem">
-            <img src="../image/celular.jpg" alt="Telefone Motorola" />
-        </div>
-        <div class="card-produto-corpo">
-            <p class="card-produto-titulo">Telefone Motorola</p>
-            <p class="card-produto-desc">Telefone Motorola em funcionamento perfeito. Carregador incluso.</p>
-            <div class="card-produto-rodape">
-            <span class="badge badge-verde">Eletrônicos</span>
-            <a href="detalhe-produto.html?id=celular" class="btn btn-secundario" style="padding: 5px 12px; font-size: 0.8rem;">Ver detalhes</a>
-            </div>
-        </div>
-        </div>
-
-        <div class="card-produto">
-        <div class="card-produto-imagem">
-            <img src="../image/bicicleta.jpg" alt="Bicicleta urbana" />
-        </div>
-        <div class="card-produto-corpo">
-            <p class="card-produto-titulo">Bicicleta urbana</p>
-            <p class="card-produto-desc">Bike usada, freios revisados. Ideal para uso diário na cidade.</p>
-            <div class="card-produto-rodape">
-            <span class="badge badge-verde">Esportes</span>
-            <a href="detalhe-produto.html?id=bicicleta" class="btn btn-secundario" style="padding: 5px 12px; font-size: 0.8rem;">Ver detalhes</a>
-            </div>
-        </div>
-        </div>
-
-        <div class="card-produto">
-        <div class="card-produto-imagem">
-            <img src="../image/kitjardinagem.jpg" alt="Kit de jardinagem" />
-        </div>
-        <div class="card-produto-corpo">
-            <p class="card-produto-titulo">Kit de jardinagem</p>
-            <p class="card-produto-desc">Ferramentas, avental e bolsa prática. Ferramentas em aço inoxidável.</p>
-            <div class="card-produto-rodape">
-            <span class="badge badge-verde">Casa</span>
-            <a href="detalhe-produto.html?id=jardinagem" class="btn btn-secundario" style="padding: 5px 12px; font-size: 0.8rem;">Ver detalhes</a>
-            </div>
-        </div>
-        </div>
-
-        <div class="card-produto">
-        <div class="card-produto-imagem">
-            <img src="../image/videogame.jpg" alt="Console retrô" />
-        </div>
-        <div class="card-produto-corpo">
-            <p class="card-produto-titulo">Console retrô + 2 controles</p>
-            <p class="card-produto-desc">Super Nintendo com 15 jogos. Funciona perfeitamente. Saudade garantida.</p>
-            <div class="card-produto-rodape">
-            <span class="badge badge-verde">Games</span>
-            <a href="detalhe-produto.html?id=console" class="btn btn-secundario" style="padding: 5px 12px; font-size: 0.8rem;">Ver detalhes</a>
-            </div>
-        </div>
-        </div>
     </div>
-    </div>
+
+    <script src="../js/eco-db.js"></script>
+    <script src="../js/eco-auth.js"></script>
+    <script src="../js/eco-t2.js"></script>
+    <script>
+      EcoDB.ensureSeed();
+      EcoAuth.initNavbar();
+      EcoT2.initExplorar();
+    </script>
 </body>
 </html>

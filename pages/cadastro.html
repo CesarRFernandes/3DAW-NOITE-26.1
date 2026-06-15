@@ -70,10 +70,15 @@
     </div>
 
     <button class="btn btn-primario" type="submit" id="btn-cadastrar" disabled>
-        Criar conta
+        Cadastrar
     </button>
 
     </form>
+
+    <div id="cadastro-sucesso" class="alerta alerta-sucesso" style="display:none;margin-top:18px;">
+      <span>&#10003;</span>
+      <span id="cadastro-sucesso-texto"></span>
+    </div>
 
     <div class="divider"></div>
 
@@ -83,7 +88,9 @@
 </div>
 </div>
 
+    <script src="../js/eco-db.js"></script>
+    <script>if (window.EcoDB) EcoDB.ensureSeed();</script>
     <script src="../js/validacao.js"></script>
-<script>initCadastro();</script>
+    <script>initCadastro();</script>
 </body>
 </html>

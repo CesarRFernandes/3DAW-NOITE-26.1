@@ -1,7 +1,5 @@
-/* =============================================================
-   EcoEscambo — validacao.js
-   Módulo central: sessão, validação, dados (localStorage)
-   ============================================================= */
+/* EcoEscambo — validacao.js
+   Módulo central: sessão, validação, dados (localStorage) */
 
 /* ── UTILITÁRIOS DE ARMAZENAMENTO ── */
 
@@ -43,18 +41,13 @@ function salvarPropostas(lista) {
   localStorage.setItem('eco_propostas', JSON.stringify(lista));
 }
 
-/* ── SEED: dados de carga inicial (equivalente ao carga.sql) ──
-   Usuários: mbelo@teste.com.br e jamile@teste.com.br
-   Senha: patasdeGalinha1 (≥6 chars, maiúscula, minúscula, número)
-   Cada um com 5 produtos ofertados
-   ── */
 function seedDados() {
   var usuarios = getUsuarios();
 
   var usuariosSeed = [
-    { nome: 'Mbelo Silva',    email: 'mbelo@teste.com.br',  senha: 'patasdeGalinha1', ativo: true },
-    { nome: 'Jamile Souza',   email: 'jamile@teste.com.br', senha: 'patasdeGalinha1', ativo: true },
-    { nome: 'Ana Paula',      email: 'ana@teste.com.br',    senha: 'patasdeGalinha1', ativo: true }
+    { nome: 'Mbelo Silva',  email: 'mbelo@teste.com.br',  senha: 'patasdeGalinha1', ativo: true },
+    { nome: 'Jamile Souza', email: 'jamile@teste.com.br', senha: 'patasdeGalinha1', ativo: true },
+    { nome: 'Ana Paula',    email: 'ana@teste.com.br',    senha: 'patasdeGalinha1', ativo: true }
   ];
 
   usuariosSeed.forEach(function(seed) {
@@ -104,9 +97,6 @@ function seedDados() {
   }
 }
 
-/* ── PROTEÇÃO DE ROTA ──
-   Chame em toda página que exige login (exceto explorar e catálogo).
-   Redireciona para login.html se não há sessão ativa.            */
 function exigirAutenticacao() {
   var sessao = getSessao();
   if (!sessao) {
@@ -116,7 +106,6 @@ function exigirAutenticacao() {
   return sessao;
 }
 
-/* ── NAVBAR: preenche nome e botão sair ── */
 function initNavbar(sessao) {
   var elNome = document.getElementById('navbar-nome');
   if (elNome && sessao) {
@@ -131,8 +120,6 @@ function initNavbar(sessao) {
     });
   }
 }
-
-/* ── VALIDAÇÕES ── */
 
 function emailValido(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -149,7 +136,6 @@ function validarSenha(senha) {
   return { valida: true, mensagem: '', forca: forca };
 }
 
-/* Aplica classe visual e mensagem de erro num campo */
 function setEstadoCampo(campo, spanErro, valido, mensagem) {
   var preenchido = campo.value.length > 0;
   campo.classList.toggle('campo-erro', !valido && preenchido);
@@ -157,17 +143,15 @@ function setEstadoCampo(campo, spanErro, valido, mensagem) {
   if (spanErro) spanErro.textContent = (!valido && preenchido) ? mensagem : '';
 }
 
-/* Atualiza barra de força de senha */
 function atualizarForcaBarra(forca, barra, texto) {
   var niveis   = ['', 'Muito fraca', 'Fraca', 'Razoável', 'Boa', 'Forte'];
   var cores    = ['', '#e74c3c',     '#e67e22', '#f1c40f', '#2ecc71', '#27ae60'];
-  var larguras = ['0%','20%','40%','60%','80%','100%'];
+  var larguras = ['0%', '20%', '40%', '60%', '80%', '100%'];
   barra.style.width      = larguras[forca] || '0%';
   barra.style.background = cores[forca]    || 'transparent';
   if (texto) texto.textContent = niveis[forca] || '';
 }
 
-/* Ativa alternância mostrar/ocultar senha */
 function initEyeIcons() {
   document.querySelectorAll('.eye-btn').forEach(function(btn) {
     btn.type = 'button';
@@ -186,19 +170,17 @@ function initEyeIcons() {
   });
 }
 
-/* ── INICIALIZADORES DE PÁGINA ── */
-
 /* Login */
 function initLogin() {
   seedDados();
   initEyeIcons();
 
-  var campoEmail = document.getElementById('email');
-  var campoSenha = document.getElementById('senha');
-  var btnEntrar  = document.getElementById('btn-entrar');
-  var spanEmail  = document.getElementById('email-erro');
-  var msgGeral   = document.getElementById('msg-geral');
-  var msgGeralTxt= document.getElementById('msg-geral-txt');
+  var campoEmail  = document.getElementById('email');
+  var campoSenha  = document.getElementById('senha');
+  var btnEntrar   = document.getElementById('btn-entrar');
+  var spanEmail   = document.getElementById('email-erro');
+  var msgGeral    = document.getElementById('msg-geral');
+  var msgGeralTxt = document.getElementById('msg-geral-txt');
 
   function mostrarErro(msg) {
     if (msgGeral && msgGeralTxt) {
@@ -233,10 +215,6 @@ function initLogin() {
       mostrarErro('E-mail ou senha incorretos.');
       return;
     }
-    if (usuario.ativo === false) {
-      mostrarErro('Conta desativada. Ative sua conta clicando no link enviado para seu e-mail.');
-      return;
-    }
 
     salvarSessao({ nome: usuario.nome, email: usuario.email });
     window.location.href = 'explorar.html';
@@ -261,10 +239,10 @@ function initCadastro() {
   var textoForca   = document.getElementById('forca-texto');
 
   function checar() {
-    var nomeOk      = campoNome.value.trim().length >= 2;
-    var emailOk     = emailValido(campoEmail.value);
-    var senhaRes    = validarSenha(campoSenha.value);
-    var confOk      = campoConf.value === campoSenha.value && campoConf.value.length > 0;
+    var nomeOk   = campoNome.value.trim().length >= 2;
+    var emailOk  = emailValido(campoEmail.value);
+    var senhaRes = validarSenha(campoSenha.value);
+    var confOk   = campoConf.value === campoSenha.value && campoConf.value.length > 0;
 
     setEstadoCampo(campoNome,  spanNome,  nomeOk  || campoNome.value === '',  'Nome deve ter ao menos 2 caracteres.');
     setEstadoCampo(campoEmail, spanEmail, emailOk || campoEmail.value === '', 'E-mail inválido.');
@@ -302,21 +280,14 @@ function initCadastro() {
       return;
     }
 
-    /* Conta criada como INATIVA — aguarda confirmação por e-mail */
     var novoUsuario = {
       nome:  campoNome.value.trim(),
       email: campoEmail.value.trim(),
       senha: campoSenha.value,
-      ativo: false
+      ativo: true
     };
     usuarios.push(novoUsuario);
     salvarUsuarios(usuarios);
-
-    /* Monta link de ativação com e-mail como parâmetro (simula token) */
-    var linkAtivacao = document.getElementById('link-ativacao');
-    if (linkAtivacao) {
-      linkAtivacao.href = 'ativar-conta.html?email=' + encodeURIComponent(novoUsuario.email);
-    }
 
     document.getElementById('form-cadastro').style.display = 'none';
     var msgOk = document.getElementById('msg-cadastro-ok');
@@ -390,7 +361,7 @@ function initNovaSenha() {
     usuarios = usuarios.map(function(u) {
       if (u.email === emailRec) {
         encontrado = true;
-        return { nome: u.nome, email: u.email, senha: senhaInput.value, ativo: u.ativo !== false };
+        return { nome: u.nome, email: u.email, senha: senhaInput.value, ativo: true };
       }
       return u;
     });
@@ -406,45 +377,6 @@ function initNovaSenha() {
     alert('Senha redefinida com sucesso!');
     window.location.href = 'login.html';
   });
-}
-
-/* Ativar conta */
-function initAtivarConta() {
-  seedDados();
-  var params = new URLSearchParams(window.location.search);
-  var email  = params.get('email');
-  var msgEl  = document.getElementById('msg-ativacao');
-
-  if (!email) {
-    if (msgEl) {
-      msgEl.className = 'alerta alerta-erro';
-      msgEl.innerHTML = '<span>&#10005;</span><span>Link de ativação inválido.</span>';
-    }
-    return;
-  }
-
-  var emailDec  = decodeURIComponent(email);
-  var usuarios  = getUsuarios();
-  var encontrado = false;
-
-  usuarios = usuarios.map(function(u) {
-    if (u.email === emailDec) { encontrado = true; return { nome: u.nome, email: u.email, senha: u.senha, ativo: true }; }
-    return u;
-  });
-
-  salvarUsuarios(usuarios);
-
-  if (msgEl) {
-    if (encontrado) {
-      msgEl.className = 'alerta alerta-sucesso';
-      msgEl.innerHTML = '<span>&#10003;</span><span>A conta relativa ao e-mail <strong>' + emailDec +
-        '</strong> foi desbloqueada com sucesso!<br><br>' +
-        '<a href="login.html" style="color:inherit;font-weight:700;">Clique aqui para entrar &rarr;</a></span>';
-    } else {
-      msgEl.className = 'alerta alerta-erro';
-      msgEl.innerHTML = '<span>&#10005;</span><span>E-mail não encontrado.</span>';
-    }
-  }
 }
 
 /* Cadastro de produto */

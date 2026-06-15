@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análise de Oferta — EcoEscambo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="explorar.html" class="navbar-logo">
+      <img src="../image/ecoescambo.png" alt="EcoEscambo" />
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="explorar.html">Explorar</a></li>
+      <li><a href="meus-produtos.html">Meus produtos</a></li>
+      <li><a href="propostas.html" class="ativo">Propostas</a></li>
+    </ul>
+    <div class="navbar-usuario">
+      <img src="../image/icone.png" alt="Usuário" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+      <a href="#" id="btn-sair" style="color:rgba(255,255,255,0.7);font-size:0.8rem;margin-left:8px;">Sair</a>
+    </div>
+  </nav>
+
+  <div class="conteudo">
+    <div class="cabecalho-pagina">
+      <h1>Análise de Oferta</h1>
+      <a href="propostas.html" class="btn btn-secundario" style="width:auto;padding:10px 20px;">Voltar</a>
+    </div>
+    <div id="secao-interesses"></div>
+    <div id="secao-detalhe" style="display:none;"></div>
+  </div>
+
+  <script src="../js/eco-db.js"></script>
+  <script src="../js/eco-auth.js"></script>
+  <script src="../js/eco-t2.js"></script>
+  <script>
+    EcoAuth.initNavbar();
+    EcoT2.initAnaliseOferta();
+  </script>
+</body>
+</html>

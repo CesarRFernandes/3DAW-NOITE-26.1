@@ -1,15 +1,14 @@
--- =============================================================
 --  EcoEscambo — cria_banco.sql
 --  Script de criação do banco de dados relacional
 --  (MySQL)
--- =============================================================
+
 
 CREATE DATABASE IF NOT EXISTS ecoescambo
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE ecoescambo;
 
--- ── UTILIZADORES ──────────────────────────────────────────────
+-- UTILIZADORES 
 CREATE TABLE IF NOT EXISTS utilizadores (
   id       INT          NOT NULL AUTO_INCREMENT,
   nome     VARCHAR(120) NOT NULL,
@@ -20,7 +19,7 @@ CREATE TABLE IF NOT EXISTS utilizadores (
   PRIMARY KEY (id)
 );
 
--- ── PRODUTOS ──────────────────────────────────────────────────
+-- PRODUTOS 
 CREATE TABLE IF NOT EXISTS produtos (
   id           INT          NOT NULL AUTO_INCREMENT,
   titulo       VARCHAR(200) NOT NULL,
@@ -34,7 +33,7 @@ CREATE TABLE IF NOT EXISTS produtos (
   FOREIGN KEY (id_utilizador) REFERENCES utilizadores(id) ON DELETE CASCADE
 );
 
--- ── INTERESSES ────────────────────────────────────────────────
+-- INTERESSES 
 CREATE TABLE IF NOT EXISTS interesses (
   id                  INT  NOT NULL AUTO_INCREMENT,
   id_produto          INT  NOT NULL,
@@ -46,7 +45,7 @@ CREATE TABLE IF NOT EXISTS interesses (
   FOREIGN KEY (id_utilizador_interessado) REFERENCES utilizadores(id)  ON DELETE CASCADE
 );
 
--- ── PROPOSTAS ─────────────────────────────────────────────────
+-- PROPOSTAS 
 CREATE TABLE IF NOT EXISTS propostas (
   id                      INT  NOT NULL AUTO_INCREMENT,
   id_interesse            INT  NOT NULL,
@@ -62,7 +61,7 @@ CREATE TABLE IF NOT EXISTS propostas (
   FOREIGN KEY (id_utilizador_ofertante) REFERENCES utilizadores(id)  ON DELETE CASCADE
 );
 
--- ── AVALIAÇÕES ────────────────────────────────────────────────
+-- AVALIAÇÕES 
 CREATE TABLE IF NOT EXISTS avaliacoes (
   id           INT  NOT NULL AUTO_INCREMENT,
   id_proposta  INT  NOT NULL,

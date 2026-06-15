@@ -1,19 +1,14 @@
--- =============================================================
 --  EcoEscambo — carga.sql
---  Dados iniciais de teste
---  Senha em texto plano: patasdeGalinha1
---  (em produção usar hash bcrypt/argon2 na coluna 'senha')
--- =============================================================
 
 USE ecoescambo;
 
--- ── UTILIZADORES DE TESTE ─────────────────────────────────────
+-- UTILIZADORES DE TESTE
 INSERT INTO utilizadores (nome, email, senha, ativo) VALUES
   ('Mbelo Silva',  'mbelo@teste.com.br',  'patasdeGalinha1', 1),
   ('Jamile Souza', 'jamile@teste.com.br', 'patasdeGalinha1', 1),
   ('Ana Paula',    'ana@teste.com.br',    'patasdeGalinha1', 1);
 
--- ── PRODUTOS — Jamile (id=2) — 5 produtos ─────────────────────
+-- Jamile  5 produtos 
 INSERT INTO produtos (titulo, categoria, descricao, foto, id_utilizador, status) VALUES
   ('Coleção de livros técnicos', 'Livros',
    '5 livros de programação em ótimo estado. Inclui Clean Code e Pragmatic Programmer.',
@@ -35,7 +30,7 @@ INSERT INTO produtos (titulo, categoria, descricao, foto, id_utilizador, status)
    '12 volumes encadernados em ótimo estado. Sem manchas ou rasuras.',
    'image/livroMarvel.jpg', 2, 'aberto');
 
--- ── PRODUTOS — Mbelo (id=1) — 5 produtos ──────────────────────
+-- Mbelo 5 produtos 
 INSERT INTO produtos (titulo, categoria, descricao, foto, id_utilizador, status) VALUES
   ('Telefone Motorola G84', 'Eletrônicos',
    'Funcionamento perfeito, sem marcas de uso. Carregador e capa originais inclusos.',

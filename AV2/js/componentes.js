@@ -1,9 +1,6 @@
-/* =============================================================
-   EcoEscambo — componentes.js
-   Fragmentos HTML reutilizáveis (navbar, rodapé)
-   ============================================================= */
+/* EcoEscambo — componentes.js
 
-/* Gera HTML da navbar conforme sessão atual */
+Gera HTML da navbar conforme sessão atual */
 function renderNavbar(paginaAtiva) {
   var sessao = getSessao();
 
@@ -47,7 +44,6 @@ function renderNavbar(paginaAtiva) {
     document.body.insertAdjacentHTML('afterbegin', html);
   }
 
-  /* Ativa botão sair se existir */
   var btnSair = document.getElementById('btn-sair');
   if (btnSair) {
     btnSair.addEventListener('click', function(e) {
@@ -58,7 +54,6 @@ function renderNavbar(paginaAtiva) {
   }
 }
 
-/* Gera HTML do rodapé */
 function renderRodape() {
   var html =
     '<footer class="rodape">' +

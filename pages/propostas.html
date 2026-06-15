@@ -43,6 +43,10 @@
 
     <div class="cabecalho-pagina">
         <h1>Propostas de troca</h1>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="analise-oferta.html" class="btn btn-primario" style="width:auto;padding:10px 20px;">Análise de Oferta</a>
+            <a href="avaliar-proposta.html" class="btn btn-secundario" style="width:auto;padding:10px 20px;">Avaliar Proposta</a>
+        </div>
     </div>
 
     <div class="abas">
@@ -152,6 +156,14 @@
         card.querySelector(".proposta-acoes").style.display = "none";
         }
     }
+    </script>
+
+    <script src="../js/eco-db.js"></script>
+    <script src="../js/eco-auth.js"></script>
+    <script>
+      EcoDB.ensureSeed();
+      EcoAuth.requireAuth();
+      EcoAuth.initNavbar();
     </script>
 
 </body>
